@@ -1,4 +1,4 @@
-module TUISearch {
+framework module TUISearch {
   umbrella header "TUISearch-umbrella.h"
 
   export *

@@ -1,0 +1,6 @@
+framework module TUITranslationPlugin {
+  umbrella header "TUITranslationPlugin-umbrella.h"
+
+  export *
+  module * { export * }
+}

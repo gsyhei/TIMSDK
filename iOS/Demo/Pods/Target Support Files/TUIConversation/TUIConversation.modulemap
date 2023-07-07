@@ -1,4 +1,4 @@
-module TUIConversation {
+framework module TUIConversation {
   umbrella header "TUIConversation-umbrella.h"
 
   export *

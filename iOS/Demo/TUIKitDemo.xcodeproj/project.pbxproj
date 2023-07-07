@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		48DF2C46253FE1B800BC522F /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 48DF2C45253FE1B800BC522F /* NotificationService.m */; };
 		48DF2C4A253FE1B800BC522F /* pushservice.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 48DF2C42253FE1B800BC522F /* pushservice.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		8AC12713370B50337C4D89BF /* Pods_TUIKitDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB6D5FC6689E7035C0A2D6CE /* Pods_TUIKitDemo.framework */; };
 		935F7C67293615770033D099 /* LaunchScreen.strings in Resources */ = {isa = PBXBuildFile; fileRef = 935F7BF1293615760033D099 /* LaunchScreen.strings */; };
 		935F7C68293615770033D099 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 935F7BF3293615760033D099 /* LaunchScreen.storyboard */; };
 		935F7C69293615770033D099 /* Main.strings in Resources */ = {isa = PBXBuildFile; fileRef = 935F7BF5293615760033D099 /* Main.strings */; };
@@ -48,7 +49,6 @@
 		93C8365629F7CA06007F2557 /* ContactsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8363929F7CA06007F2557 /* ContactsController.m */; };
 		93C8365729F7CA06007F2557 /* SettingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8363C29F7CA06007F2557 /* SettingController.m */; };
 		93C8365829F7CA06007F2557 /* ConversationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C8363E29F7CA06007F2557 /* ConversationController.m */; };
-		BCF739AA621A7AF4B48F1525 /* libPods-TUIKitDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D1BCBC0335EEFE4307055DBB /* libPods-TUIKitDemo.a */; };
 		CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE0BDFA8221D53C60083E1B0 /* Bugly.framework */; };
 		CE48482027019FC800F53B16 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CE48481F27019FC800F53B16 /* main.m */; };
 /* End PBXBuildFile section */
@@ -196,7 +196,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE0BDFA9221D53C60083E1B0 /* Bugly.framework in Frameworks */,
-				C439FE45AA54FF92EE50FF64 /* Pods_TUIKitDemo.framework in Frameworks */,
+				8AC12713370B50337C4D89BF /* Pods_TUIKitDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -806,7 +806,7 @@
 				DEVELOPMENT_TEAM = F8A3GH6Q4W;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = F8A3GH6Q4W;
 				INFOPLIST_FILE = pushservice/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -830,7 +830,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = F8A3GH6Q4W;
 				INFOPLIST_FILE = pushservice/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -852,7 +852,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = HKB8WPFBR9;
 				INFOPLIST_FILE = pushservice/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

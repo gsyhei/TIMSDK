@@ -1,4 +1,4 @@
-module TUIChat {
+framework module TUIChat {
   umbrella header "TUIChat-umbrella.h"
 
   export *

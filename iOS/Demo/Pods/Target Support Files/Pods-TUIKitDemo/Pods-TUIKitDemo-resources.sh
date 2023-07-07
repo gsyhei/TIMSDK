@@ -97,40 +97,22 @@ EOM
   esac
 }
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_resource "${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle"
-  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUICalling/TUICallingKitBundle.bundle"
-  install_resource "${PODS_ROOT}/TUIChat/TUIChat/Resources/TUIChat.bundle"
-  install_resource "${PODS_ROOT}/TUIChat/TUIChat/Resources/TUIChatFace.bundle"
-  install_resource "${PODS_ROOT}/TUIContact/TUIContact/Resources/TUIContact.bundle"
-  install_resource "${PODS_ROOT}/TUIConversation/TUIConversation/Resources/TUIConversation.bundle"
-  install_resource "${PODS_ROOT}/TUICore/TUICore/Resources/TUICore.bundle"
-  install_resource "${PODS_ROOT}/TUICore/TUICore/Resources/TUIKitLocalizable.bundle"
-  install_resource "${PODS_ROOT}/TUIGroup/TUIGroup/Resources/TUIGroup.bundle"
-  install_resource "${PODS_ROOT}/TUISearch/TUISearch/Resources/TUISearch.bundle"
+  install_resource "${PODS_ROOT}/TUICallKit/TUICallKit/Resources/TUICallKitTheme.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUICallKit/TUICallingKitBundle.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUIRoomKit/TUIRoomKitBundle.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUIVideoSeat/TUIVideoSeatKitBundle.bundle"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_resource "${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle"
-  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUICalling/TUICallingKitBundle.bundle"
-  install_resource "${PODS_ROOT}/TUIChat/TUIChat/Resources/TUIChat.bundle"
-  install_resource "${PODS_ROOT}/TUIChat/TUIChat/Resources/TUIChatFace.bundle"
-  install_resource "${PODS_ROOT}/TUIContact/TUIContact/Resources/TUIContact.bundle"
-  install_resource "${PODS_ROOT}/TUIConversation/TUIConversation/Resources/TUIConversation.bundle"
-  install_resource "${PODS_ROOT}/TUICore/TUICore/Resources/TUICore.bundle"
-  install_resource "${PODS_ROOT}/TUICore/TUICore/Resources/TUIKitLocalizable.bundle"
-  install_resource "${PODS_ROOT}/TUIGroup/TUIGroup/Resources/TUIGroup.bundle"
-  install_resource "${PODS_ROOT}/TUISearch/TUISearch/Resources/TUISearch.bundle"
+  install_resource "${PODS_ROOT}/TUICallKit/TUICallKit/Resources/TUICallKitTheme.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUICallKit/TUICallingKitBundle.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUIRoomKit/TUIRoomKitBundle.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUIVideoSeat/TUIVideoSeatKitBundle.bundle"
 fi
 if [[ "$CONFIGURATION" == "DailyBuild" ]]; then
-  install_resource "${PODS_ROOT}/MJRefresh/MJRefresh/MJRefresh.bundle"
-  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUICalling/TUICallingKitBundle.bundle"
-  install_resource "${PODS_ROOT}/TUIChat/TUIChat/Resources/TUIChat.bundle"
-  install_resource "${PODS_ROOT}/TUIChat/TUIChat/Resources/TUIChatFace.bundle"
-  install_resource "${PODS_ROOT}/TUIContact/TUIContact/Resources/TUIContact.bundle"
-  install_resource "${PODS_ROOT}/TUIConversation/TUIConversation/Resources/TUIConversation.bundle"
-  install_resource "${PODS_ROOT}/TUICore/TUICore/Resources/TUICore.bundle"
-  install_resource "${PODS_ROOT}/TUICore/TUICore/Resources/TUIKitLocalizable.bundle"
-  install_resource "${PODS_ROOT}/TUIGroup/TUIGroup/Resources/TUIGroup.bundle"
-  install_resource "${PODS_ROOT}/TUISearch/TUISearch/Resources/TUISearch.bundle"
+  install_resource "${PODS_ROOT}/TUICallKit/TUICallKit/Resources/TUICallKitTheme.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUICallKit/TUICallingKitBundle.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUIRoomKit/TUIRoomKitBundle.bundle"
+  install_resource "${PODS_CONFIGURATION_BUILD_DIR}/TUIVideoSeat/TUIVideoSeatKitBundle.bundle"
 fi
 
 mkdir -p "${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}"

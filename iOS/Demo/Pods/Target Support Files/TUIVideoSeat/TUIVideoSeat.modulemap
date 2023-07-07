@@ -1,0 +1,6 @@
+framework module TUIVideoSeat {
+  umbrella header "TUIVideoSeat-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,4 +1,4 @@
-module TUIGroup {
+framework module TUIGroup {
   umbrella header "TUIGroup-umbrella.h"
 
   export *

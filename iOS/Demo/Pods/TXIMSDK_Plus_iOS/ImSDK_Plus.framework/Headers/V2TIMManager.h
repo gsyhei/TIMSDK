@@ -16,6 +16,18 @@
 #ifndef ImSDK_V2TIMManager_h
 #define ImSDK_V2TIMManager_h
 
+#if defined(BUILD_V2TIM_SDK)
+#define V2TIM_EXPORT __attribute__((visibility("default")))
+#else
+#define V2TIM_EXPORT
+#endif
+
+#if defined(__cplusplus)
+#define V2TIM_EXTERN extern "C" V2TIM_EXPORT
+#else
+#define V2TIM_EXTERN extern V2TIM_EXPORT
+#endif
+
 #import <Foundation/Foundation.h>
 @class V2TIMSDKConfig;
 @class V2TIMUserInfo;
@@ -25,16 +37,18 @@
 @class V2TIMGroupChangeInfo;
 @class V2TIMGroupMemberChangeInfo;
 @class V2TIMUserReceiveMessageOptInfo;
+@class V2TIMTopicInfo;
+@class V2TIMUserStatus;
 
-@protocol V2TIMSDKListener;
-@protocol V2TIMSimpleMsgListener;
-@protocol V2TIMGroupListener;
+V2TIM_EXPORT @protocol V2TIMSDKListener;
+V2TIM_EXPORT @protocol V2TIMSimpleMsgListener;
+V2TIM_EXPORT @protocol V2TIMGroupListener;
 
-extern NSString *const GroupType_Work;
-extern NSString *const GroupType_Public;
-extern NSString *const GroupType_Meeting;
-extern NSString *const GroupType_AVChatRoom;
-extern NSString *const GroupType_Community;
+V2TIM_EXTERN NSString *const GroupType_Work;
+V2TIM_EXTERN NSString *const GroupType_Public;
+V2TIM_EXTERN NSString *const GroupType_Meeting;
+V2TIM_EXTERN NSString *const GroupType_AVChatRoom;
+V2TIM_EXTERN NSString *const GroupType_Community;
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -45,7 +59,7 @@ extern NSString *const GroupType_Community;
 /////////////////////////////////////////////////////////////////////////////////
 
 
-@interface V2TIMManager : NSObject
+V2TIM_EXPORT @interface V2TIMManager : NSObject
 
 /// 成功通用回调
 typedef void (^V2TIMSucc)(void);
@@ -57,6 +71,8 @@ typedef void (^V2TIMCreateGroupSucc)(NSString * groupID);
 typedef void (^V2TIMUserFullInfoListSucc)(NSArray <V2TIMUserFullInfo *> * infoList);
 /// 实验性 API 接口成功回调
 typedef void (^V2TIMCallExperimentalAPISucc)(NSObject *result);
+/// 获取用户状态列表成功回调
+typedef void (^V2TIMUserStatusListSucc)(NSArray<V2TIMUserStatus *> *result);
 
 /// 登录状态
 typedef NS_ENUM(NSInteger, V2TIMLoginStatus) {
@@ -102,6 +118,14 @@ typedef NS_ENUM(NSInteger, V2TIMGroupMemberRole) {
     V2TIM_GROUP_MEMBER_ROLE_MEMBER         = 200,  ///< 群成员
     V2TIM_GROUP_MEMBER_ROLE_ADMIN          = 300,  ///< 群管理员
     V2TIM_GROUP_MEMBER_ROLE_SUPER          = 400,  ///< 群主
+};
+
+/// 用户状态类型
+typedef NS_ENUM(NSInteger, V2TIMUserStatusType) {
+    V2TIM_USER_STATUS_UNKNOWN             = 0,  ///< 未知状态
+    V2TIM_USER_STATUS_ONLINE              = 1,  ///< 在线状态
+    V2TIM_USER_STATUS_OFFLINE             = 2,  ///< 离线状态
+    V2TIM_USER_STATUS_UNLOGINED           = 3,  ///< 未登录（如主动调用 logout 接口，或者账号注册后还未登录）
 };
 
 /// 日志回调
@@ -172,6 +196,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
  * - 登陆时票据过期：login 函数的 V2TIMFail 会返回 ERR_USER_SIG_EXPIRED（6206）或者 ERR_SVR_ACCOUNT_USERSIG_EXPIRED（70001） 错误码，此时请您生成新的 userSig 重新登录。
  * - 在线时票据过期：用户在线期间也可能收到 V2TIMSDKListener -> onUserSigExpired 回调，此时也是需要您生成新的 userSig 并重新登录。
  * - 在线时被踢下线：用户在线情况下被踢，SDK 会通过 V2TIMSDKListener -> onKickedOffline 回调通知给您，此时可以 UI 提示用户，并再次调用 login() 重新登录。
+ * - 同平台多设备在线：该功能为IM旗舰版功能，购买[旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17487)后可使用，详见[价格说明](https://cloud.tencent.com/document/product/269/11673?from=17224#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85)。
  */
 - (void)login:(NSString *)userID userSig:(NSString *)userSig succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
@@ -211,7 +236,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 - (void)removeSimpleMsgListener:(id<V2TIMSimpleMsgListener>)listener NS_SWIFT_NAME(removeSimpleMsgListener(listener:));
 
 /**
- *  3.3 发送单聊普通文本消息（最大支持 8KB）
+ *  3.3 发送单聊普通文本消息（最大支持 12KB）
  *
  *  文本消息支持云端的脏词过滤，如果用户发送的消息中有敏感词，V2TIMFail 回调将会返回 80001 错误码。
  *  @return 返回消息的唯一标识 ID
@@ -221,7 +246,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 - (NSString*)sendC2CTextMessage:(NSString *)text to:(NSString *)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  3.4 发送单聊自定义（信令）消息（最大支持 8KB）
+ *  3.4 发送单聊自定义（信令）消息（最大支持 12KB）
  *
  *  自定义消息本质就是一端二进制 buffer，您可以在其上自由组织自己的消息格式（常用于发送信令），但是自定义消息不支持云端敏感词过滤。
  *  @return 返回消息的唯一标识 ID
@@ -231,7 +256,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 - (NSString*)sendC2CCustomMessage:(NSData *)customData to:(NSString *)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  3.5 发送群聊普通文本消息（最大支持 8KB）
+ *  3.5 发送群聊普通文本消息（最大支持 12KB）
  *
  *  @param priority 设置消息的优先级，我们没有办法所有消息都能 100% 送达每一个用户，但高优先级的消息会有更高的送达成功率。
  *      - HIGH ：云端会优先传输，适用于在群里发送重要消息，比如主播发送的文本消息等。
@@ -243,7 +268,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 - (NSString*)sendGroupTextMessage:(NSString *)text to:(NSString *)groupID priority:(V2TIMMessagePriority)priority succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  3.6 发送群聊自定义（信令）消息（最大支持 8KB）
+ *  3.6 发送群聊自定义（信令）消息（最大支持 12KB）
  *
  *  @param priority 设置消息的优先级，我们没有办法所有消息都能 100% 送达每一个用户，但高优先级的消息会有更高的送达成功率。
  *      - HIGH ：云端会优先传输，适用于在群里发送重要信令，比如连麦邀请，PK邀请、礼物赠送等关键性信令。
@@ -273,7 +298,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 /**
  *  4.3 创建群组
  *
- *  @param groupType 群类型，我们为您预定义好了四种常用的群类型，您也可以在控制台定义自己需要的群类型：
+ *  @param groupType 群类型，我们为您预定义好了几种常用的群类型，您也可以在控制台定义自己需要的群类型：
  *  - "Work"       ：工作群，成员上限 200  人，不支持由用户主动加入，需要他人邀请入群，适合用于类似微信中随意组建的工作群（对应老版本的 Private 群）。
  *  - "Public"     ：公开群，成员上限 2000 人，任何人都可以申请加群，但加群需群主或管理员审批，适合用于类似 QQ 中由群主管理的兴趣群。
  *  - "Meeting"    ：会议群，成员上限 6000 人，任何人都可以自由进出，且加群无需被审批，适合用于视频会议和在线培训等场景（对应老版本的 ChatRoom 群）。
@@ -285,7 +310,9 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
  *  @param groupName 群名称，不能为 nil，最长30字节
  *
  *  @note 请注意如下特殊逻辑:
- *  - 不支持在同一个 SDKAPPID 下创建两个相同 groupID 的群
+ *  - 不支持在同一个 SDKAPPID 下创建两个相同 groupID 的群。
+ *  - 社群（Community）功能仅 5.8.1668 增强版及以上版本支持，需[购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17213)并[申请开通](https://cloud.tencent.com/document/product/269/3916?from=17215)后方可使用。
+ *  - 直播群（AVChatRoom）：在进程重启或重新登录之后，如果想继续接收直播群的消息，请您调用 joinGroup 重新加入直播群。
  */
 - (void)createGroup:(NSString *)groupType groupID:(NSString*)groupID groupName:(NSString *)groupName succ:(V2TIMCreateGroupSucc)succ fail:(V2TIMFail)fail;
 
@@ -296,6 +323,8 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
  *  - 工作群（Work）：不能主动入群，只能通过群成员调用 V2TIMManager+Group.h -> inviteUserToGroup 接口邀请入群。
  *  - 公开群（Public）：申请入群后，需要管理员审批，管理员在收到 V2TIMGroupListener -> onReceiveJoinApplication 回调后调用 V2TIMManager+Group.h -> getGroupApplicationList 接口处理加群请求。
  *  - 其他群：可以直接入群。
+ *  - 直播群（AVChatRoom）：在进程重启或重新登录之后，如果想继续接收直播群的消息，请您调用 joinGroup 重新加入直播群。
+ *  - 直播群（AVChatRoom）：直播群新成员可以查看入群前消息，该功能为 IM 旗舰版功能，[购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17484)后可使用，详见[价格说明](https://cloud.tencent.com/document/product/269/11673?from=17179#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85)
  */
 - (void)joinGroup:(NSString*)groupID msg:(NSString*)msg succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
@@ -339,7 +368,51 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
  */
 - (void)setSelfInfo:(V2TIMUserFullInfo *)Info succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
-//  5.5 更多功能，详见 V2TIMManager+Friendship.h
+/**
+ *  5.3 查询用户状态，从 6.3 版本开始支持
+ *
+ *  @param userIDList 需要获取的用户 ID
+ *
+ *  @note 请注意：
+ *  - 如果您想查询自己的自定义状态，您只需要传入自己的 userID 即可
+ *  - 当您批量查询时，接口只会返回查询成功的用户状态信息；当所有用户均查询失败时，接口会报错
+ *  - 查询其他用户状态为 IM 旗舰版功能，[购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17491)后可使用，详见[价格说明](https://cloud.tencent.com/document/product/269/11673?from=17472#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85)。
+ */
+- (void)getUserStatus:(NSArray *)userIDList succ:(V2TIMUserStatusListSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ *  5.4 设置自己的状态，从 6.3 版本开始支持
+ *
+ *  @param status 待设置的自定义状态
+ *
+ *  @note 请注意，该接口只支持设置自己的自定义状态，即 V2TIMUserStatus.customStatus
+ */
+- (void)setSelfStatus:(V2TIMUserStatus *)status succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ *  5.5 订阅用户状态，从 6.3 版本开始支持
+ *
+ *  @param userIDList 待订阅的用户 ID
+ *
+ *  @note 请注意
+ *   - 当成功订阅用户状态后，当对方的状态（包含在线状态、自定义状态）发生变更后，您可以监听 @onUserStatusChanged 回调来感知
+ *   - 如果您需要订阅好友列表的状态，您只需要在控制台上打开开关即可，无需调用该接口
+ *   - 该接口不支持订阅自己，您可以通过监听 @onUserStatusChanged 回调来感知自身的自定义状态的变更
+ *   - 订阅列表有个数限制，超过限制后，会自动淘汰最先订阅的用户
+ *   - 该功能为 IM 旗舰版功能，[购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17491)后可使用，详见[价格说明](https://cloud.tencent.com/document/product/269/11673?from=17472#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85)。
+ */
+- (void)subscribeUserStatus:(NSArray *)userIDList succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ *  5.6 取消订阅用户状态，从 6.3 版本开始支持
+ *
+ *  @note
+ *   - 当 userIDList 为空或者 nil 时，取消当前所有的订阅
+ *   - 该功能为 IM 旗舰版功能，[购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17491)后可使用，详见[价格说明](https://cloud.tencent.com/document/product/269/11673?from=17472#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85)。
+ */
+- (void)unsubscribeUserStatus:(NSArray *)userIDList succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+
+//  5.7 更多功能，详见 V2TIMManager+Friendship.h
 
 /////////////////////////////////////////////////////////////////////////////////
 //                        扩展接口
@@ -365,7 +438,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// IMSDK 主核心回调
-@protocol V2TIMSDKListener <NSObject>
+V2TIM_EXPORT @protocol V2TIMSDKListener <NSObject>
 @optional
 /// SDK 正在连接到服务器
 - (void)onConnecting;
@@ -384,6 +457,16 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 
 /// 当前用户的资料发生了更新
 - (void)onSelfInfoUpdated:(V2TIMUserFullInfo *)Info;
+
+/**
+ * 用户状态变更通知
+ *
+ * @note 收到通知的情况：
+ * 1. 订阅过的用户发生了状态变更（包括在线状态和自定义状态），会触发该回调
+ * 2. 在 IM 控制台打开了好友状态通知开关，即使未主动订阅，当好友状态发生变更时，也会触发该回调
+ * 3. 同一个账号多设备登录，当其中一台设备修改了自定义状态，所有设备都会收到该回调
+ */
+- (void)onUserStatusChanged:(NSArray<V2TIMUserStatus *> *)userStatusList;
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -392,7 +475,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// IMSDK 基本消息回调
-@protocol V2TIMSimpleMsgListener <NSObject>
+V2TIM_EXPORT @protocol V2TIMSimpleMsgListener <NSObject>
 @optional
 
 /// 收到 C2C 文本消息
@@ -414,17 +497,19 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// IMSDK 群组事件回调
-@protocol V2TIMGroupListener <NSObject>
+V2TIM_EXPORT @protocol V2TIMGroupListener <NSObject>
 @optional
 
 /////////////////////////////////////////////////////////////////////////////////
 //        群成员相关通知
 /////////////////////////////////////////////////////////////////////////////////
 
-/// 有新成员加入群（该群所有的成员都能收到）
+/// 有新成员加入群（该群所有的成员都能收到)
+/// 会议群（Meeting）默认无此回调，如需回调，请前往 [控制台](https://console.cloud.tencent.com/im) (功能配置 -> 群组配置 -> 群系统通知配置 -> 群成员变更通知) 主动配置。
 - (void)onMemberEnter:(NSString *)groupID memberList:(NSArray<V2TIMGroupMemberInfo *>*)memberList;
 
-/// 有成员离开群（该群所有的成员都能收到）
+/// 有成员离开群（该群所有的成员都能收到)
+/// 会议群（Meeting）默认无此回调，如需回调，请前往 [控制台](https://console.cloud.tencent.com/im) (功能配置 -> 群组配置 -> 群系统通知配置 -> 群成员变更通知) 主动配置。
 - (void)onMemberLeave:(NSString *)groupID member:(V2TIMGroupMemberInfo *)member;
 
 /// 某成员被拉入某群（该群所有的成员都能收到）
@@ -433,7 +518,8 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 /// 有成员被踢出某群（该群所有的成员都能收到）
 - (void)onMemberKicked:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser memberList:(NSArray<V2TIMGroupMemberInfo *>*)memberList;
 
-/// 某成员信息发生变更（该群所有的成员都能收到）。会议群（Meeting）和直播群（AVChatRoom）默认无此回调，如需回调请提交工单配置
+/// 某成员信息发生变更（该群所有的成员都能收到）
+/// 会议群（Meeting）和直播群（AVChatRoom）默认无此回调，如需回调，请前往 [控制台](https://console.cloud.tencent.com/im) (功能配置 -> 群组配置 -> 群系统通知配置 -> 群成员资料变更通知) 主动配置。
 - (void)onMemberInfoChanged:(NSString *)groupID changeInfoList:(NSArray <V2TIMGroupMemberChangeInfo *> *)changeInfoList;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -450,10 +536,15 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 - (void)onGroupRecycled:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser;
 
 /// 某个已加入的群的信息被修改了（该群所有的成员都能收到）
+/// 以下字段的修改可能会引发该通知 groupName & introduction & notification & faceUrl & owner & allMute & custom
+/// 控制指定字段 下发通知/存漫游 请前往 [控制台](https://console.cloud.tencent.com/im) (功能配置 -> 群组配置 -> 群系统通知配置 -> 群资料变更通知) 主动配置。
 - (void)onGroupInfoChanged:(NSString *)groupID changeInfoList:(NSArray <V2TIMGroupChangeInfo *> *)changeInfoList;
 
 /// 某个已加入的群的属性被修改了，会返回所在群组的所有属性（该群所有的成员都能收到）
 - (void)onGroupAttributeChanged:(NSString *)groupID attributes:(NSMutableDictionary<NSString *,NSString *> *)attributes;
+
+/// 某个已加入的群的计数器被修改了，会返回当前变更的群计数器（该群所有的成员都能收到）
+- (void)onGroupCounterChanged:(NSString *)groupID key:(NSString *)key newValue:(NSInteger)newValue;
 
 /////////////////////////////////////////////////////////////////////////////////
 //        加群申请相关通知
@@ -475,11 +566,23 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 /// 取消管理员身份
 - (void)onRevokeAdministrator:(NSString *)groupID opUser:(V2TIMGroupMemberInfo *)opUser memberList:(NSArray <V2TIMGroupMemberInfo *> *)memberList;
 
-/// 自己主动退出群组（主要用于多端同步，直播群（AVChatRoom）不支持）
+/// 自己主动退出群组（主要用于多端同步）
 - (void)onQuitFromGroup:(NSString *)groupID;
 
 /// 收到 RESTAPI 下发的自定义系统消息
 - (void)onReceiveRESTCustomData:(NSString *)groupID data:(NSData *)data;
+
+/////////////////////////////////////////////////////////////////////////////////
+//             话题事件监听回调
+/////////////////////////////////////////////////////////////////////////////////
+/// 话题创建回调
+- (void)onTopicCreated:(NSString *)groupID topicID:(NSString *)topicID;
+
+/// 话题被删除回调
+- (void)onTopicDeleted:(NSString *)groupID topicIDList:(NSArray<NSString *> *)topicIDList;
+
+/// 话题更新回调
+- (void)onTopicChanged:(NSString *)groupID topicInfo:(V2TIMTopicInfo *)topicInfo;
 
 @end
 
@@ -489,7 +592,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 用户基本资料
-@interface V2TIMUserInfo : NSObject
+V2TIM_EXPORT @interface V2TIMUserInfo : NSObject
 /// 用户 ID
 @property(nonatomic,strong,readonly) NSString* userID;
 
@@ -501,7 +604,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 @end
 
 /// 用户详细资料
-@interface V2TIMUserFullInfo : V2TIMUserInfo
+V2TIM_EXPORT @interface V2TIMUserFullInfo : V2TIMUserInfo
 
 /// 用户签名
 @property(nonatomic,strong) NSString *selfSignature;
@@ -529,11 +632,31 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 
 /////////////////////////////////////////////////////////////////////////////////
 //
+//                    用户状态
+//
+/////////////////////////////////////////////////////////////////////////////////
+
+V2TIM_EXPORT @interface V2TIMUserStatus : NSObject
+
+/// 用户的 ID
+@property (nonatomic, copy, readonly) NSString *userID;
+
+/// 用户的状态
+@property (nonatomic, assign, readonly) V2TIMUserStatusType statusType;
+
+/// 用户的自定义状态, 最大 50 字节
+@property (nonatomic, copy) NSString *customStatus;
+
+@end
+
+
+/////////////////////////////////////////////////////////////////////////////////
+//
 //                        群成员资料
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 群成员基本资料
-@interface V2TIMGroupMemberInfo : NSObject
+V2TIM_EXPORT @interface V2TIMGroupMemberInfo : NSObject
 /// 用户 ID
 @property(nonatomic,strong) NSString* userID;
 
@@ -552,7 +675,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 @end
 
 /// 群成员详细资料
-@interface V2TIMGroupMemberFullInfo : V2TIMGroupMemberInfo
+V2TIM_EXPORT @interface V2TIMGroupMemberFullInfo : V2TIMGroupMemberInfo
 /// 群成员自定义字段
 /// 首先要在 [控制台](https://console.cloud.tencent.com/im) (功能配置 -> 群成员自定义字段) 配置用户自定义字段，然后再调用该接口进行设置。
 @property(nonatomic,strong) NSDictionary<NSString *,NSData *> * customInfo;
@@ -566,6 +689,13 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 /// 群成员入群时间，自动生成，不可修改
 @property(nonatomic,assign,readonly) time_t joinTime;
 
+/// 群成员是否在线
+/// @note 请注意：
+/// - 不支持直播群 AVChatRoom；
+/// - 该字段仅在调用 - getGroupMemberList:filter:nextSeq:succ:fail: 接口时有效；
+/// - 7.3 及其以上版本支持，需要您购买旗舰版套餐。
+@property(nonatomic,assign,readonly) BOOL isOnline;
+
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -574,7 +704,7 @@ typedef void (^V2TIMLogListener)(V2TIMLogLevel logLevel, NSString * logContent);
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-@interface V2TIMSDKConfig : NSObject
+V2TIM_EXPORT @interface V2TIMSDKConfig : NSObject
 
 /// 本地写 log 文件的等级，默认 DEBUG 等级， IMSDK 的日志默认存储于 /Library/Caches/ 目录下
 @property(nonatomic,assign) V2TIMLogLevel logLevel;

@@ -1,4 +1,4 @@
-module TUIContact {
+framework module TUIContact {
   umbrella header "TUIContact-umbrella.h"
 
   export *

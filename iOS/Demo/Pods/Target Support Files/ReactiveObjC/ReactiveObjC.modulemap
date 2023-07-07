@@ -1,4 +1,4 @@
-module ReactiveObjC {
+framework module ReactiveObjC {
   umbrella header "ReactiveObjC-umbrella.h"
 
   export *

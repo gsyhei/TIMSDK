@@ -1,0 +1,518 @@
+PODS:
+  - Masonry (1.1.0)
+  - MJRefresh (3.7.5)
+  - ReactiveObjC (3.1.1)
+  - SDWebImage (5.16.0):
+    - SDWebImage/Core (= 5.16.0)
+  - SDWebImage/Core (5.16.0)
+  - SnapKit (5.6.0)
+  - TIMCommon (7.3.4358):
+    - TIMCommon/BaseCell (= 7.3.4358)
+    - TIMCommon/CommonModel (= 7.3.4358)
+    - TIMCommon/UI_Classic (= 7.3.4358)
+    - TIMCommon/UI_Minimalist (= 7.3.4358)
+  - TIMCommon/BaseCell (7.3.4358):
+    - TIMCommon/BaseCell/CellData (= 7.3.4358)
+    - TIMCommon/BaseCell/CellUI (= 7.3.4358)
+  - TIMCommon/BaseCell/CellData (7.3.4358):
+    - TIMCommon/CommonModel
+  - TIMCommon/BaseCell/CellUI (7.3.4358):
+    - TIMCommon/BaseCell/CellData
+  - TIMCommon/CommonModel (7.3.4358):
+    - ReactiveObjC
+    - SDWebImage
+    - TUICore (= 7.3.4358)
+    - TXIMSDK_Plus_iOS (= 7.3.4358)
+  - TIMCommon/UI_Classic (7.3.4358):
+    - TIMCommon/UI_Classic/Cell (= 7.3.4358)
+  - TIMCommon/UI_Classic/Cell (7.3.4358):
+    - TIMCommon/UI_Classic/Cell/CellData (= 7.3.4358)
+    - TIMCommon/UI_Classic/Cell/CellUI (= 7.3.4358)
+  - TIMCommon/UI_Classic/Cell/CellData (7.3.4358):
+    - TIMCommon/BaseCell
+  - TIMCommon/UI_Classic/Cell/CellUI (7.3.4358):
+    - TIMCommon/UI_Classic/Cell/CellData
+  - TIMCommon/UI_Minimalist (7.3.4358):
+    - TIMCommon/UI_Minimalist/Cell (= 7.3.4358)
+  - TIMCommon/UI_Minimalist/Cell (7.3.4358):
+    - TIMCommon/UI_Minimalist/Cell/CellData (= 7.3.4358)
+    - TIMCommon/UI_Minimalist/Cell/CellUI (= 7.3.4358)
+  - TIMCommon/UI_Minimalist/Cell/CellData (7.3.4358):
+    - TIMCommon/BaseCell
+  - TIMCommon/UI_Minimalist/Cell/CellUI (7.3.4358):
+    - TIMCommon/UI_Minimalist/Cell/CellData
+  - TUICallEngine/TRTC (1.7.1.510):
+    - TXIMSDK_Plus_iOS (~> 7.3.4358)
+    - TXLiteAVSDK_TRTC (>= 11.0.14028)
+  - TUICallKit (1.7.1.510):
+    - Masonry
+    - TUICallKit/TRTC (= 1.7.1.510)
+    - TUICore (~> 7.3.4358)
+  - TUICallKit/TRTC (1.7.1.510):
+    - Masonry
+    - TUICallEngine/TRTC (~> 1.7.1.510)
+    - TUICore (~> 7.3.4358)
+    - TXLiteAVSDK_TRTC
+  - TUIChat (7.3.4358):
+    - TUIChat/ALL (= 7.3.4358)
+  - TUIChat/ALL (7.3.4358):
+    - TUIChat/UI_Classic
+    - TUIChat/UI_Minimalist
+  - TUIChat/BaseCell (7.3.4358):
+    - TUIChat/BaseCell/CellData (= 7.3.4358)
+    - TUIChat/BaseCell/CellUI (= 7.3.4358)
+  - TUIChat/BaseCell/CellData (7.3.4358):
+    - TUIChat/CommonModel
+  - TUIChat/BaseCell/CellUI (7.3.4358):
+    - TUIChat/BaseCell/CellData
+  - TUIChat/BaseDataProvider (7.3.4358):
+    - TUIChat/BaseCell
+  - TUIChat/CommonModel (7.3.4358):
+    - ReactiveObjC
+    - SDWebImage
+    - TIMCommon (= 7.3.4358)
+    - TUIChat/VoiceConvert
+    - TUICore (= 7.3.4358)
+    - TXIMSDK_Plus_iOS (= 7.3.4358)
+  - TUIChat/CommonUI (7.3.4358):
+    - TUIChat/CommonUI/Camera (= 7.3.4358)
+    - TUIChat/CommonUI/Pendency (= 7.3.4358)
+    - TUIChat/CommonUI/Pop (= 7.3.4358)
+  - TUIChat/CommonUI/Camera (7.3.4358):
+    - TUIChat/BaseDataProvider
+  - TUIChat/CommonUI/Pendency (7.3.4358):
+    - TUIChat/BaseDataProvider
+  - TUIChat/CommonUI/Pop (7.3.4358):
+    - TUIChat/BaseDataProvider
+  - TUIChat/UI_Classic (7.3.4358):
+    - TUIChat/UI_Classic/Cell (= 7.3.4358)
+    - TUIChat/UI_Classic/Chat (= 7.3.4358)
+    - TUIChat/UI_Classic/DataProvider (= 7.3.4358)
+    - TUIChat/UI_Classic/Header (= 7.3.4358)
+    - TUIChat/UI_Classic/Input (= 7.3.4358)
+    - TUIChat/UI_Classic/Service (= 7.3.4358)
+  - TUIChat/UI_Classic/Cell (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellData (= 7.3.4358)
+    - TUIChat/UI_Classic/Cell/CellUI (= 7.3.4358)
+  - TUIChat/UI_Classic/Cell/CellData (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellData/Base (= 7.3.4358)
+    - TUIChat/UI_Classic/Cell/CellData/Chat (= 7.3.4358)
+    - TUIChat/UI_Classic/Cell/CellData/Custom (= 7.3.4358)
+    - TUIChat/UI_Classic/Cell/CellData/Reply (= 7.3.4358)
+  - TUIChat/UI_Classic/Cell/CellData/Base (7.3.4358):
+    - TUIChat/CommonUI
+  - TUIChat/UI_Classic/Cell/CellData/Chat (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellData/Base
+  - TUIChat/UI_Classic/Cell/CellData/Custom (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellData/Chat
+  - TUIChat/UI_Classic/Cell/CellData/Reply (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellData/Custom
+  - TUIChat/UI_Classic/Cell/CellUI (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellUI/Base (= 7.3.4358)
+    - TUIChat/UI_Classic/Cell/CellUI/Chat (= 7.3.4358)
+    - TUIChat/UI_Classic/Cell/CellUI/Custom (= 7.3.4358)
+    - TUIChat/UI_Classic/Cell/CellUI/Reply (= 7.3.4358)
+  - TUIChat/UI_Classic/Cell/CellUI/Base (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellData
+  - TUIChat/UI_Classic/Cell/CellUI/Chat (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellUI/Base
+  - TUIChat/UI_Classic/Cell/CellUI/Custom (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellUI/Chat
+  - TUIChat/UI_Classic/Cell/CellUI/Reply (7.3.4358):
+    - TUIChat/UI_Classic/Cell/CellUI/Custom
+  - TUIChat/UI_Classic/Chat (7.3.4358):
+    - TUIChat/UI_Classic/Input
+  - TUIChat/UI_Classic/DataProvider (7.3.4358):
+    - TUIChat/UI_Classic/Cell
+  - TUIChat/UI_Classic/Header (7.3.4358):
+    - TUIChat/UI_Classic/Service
+  - TUIChat/UI_Classic/Input (7.3.4358):
+    - TUIChat/UI_Classic/DataProvider
+  - TUIChat/UI_Classic/Service (7.3.4358):
+    - TUIChat/UI_Classic/Chat
+  - TUIChat/UI_Minimalist (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Chat (= 7.3.4358)
+    - TUIChat/UI_Minimalist/DataProvider (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Header (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Input (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Service (= 7.3.4358)
+  - TUIChat/UI_Minimalist/Cell (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellData (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Cell/CellUI (= 7.3.4358)
+  - TUIChat/UI_Minimalist/Cell/CellData (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellData/Base (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Cell/CellData/Chat (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Cell/CellData/Custom (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Cell/CellData/Reply (= 7.3.4358)
+  - TUIChat/UI_Minimalist/Cell/CellData/Base (7.3.4358):
+    - TUIChat/CommonUI
+  - TUIChat/UI_Minimalist/Cell/CellData/Chat (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellData/Base
+  - TUIChat/UI_Minimalist/Cell/CellData/Custom (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellData/Chat
+  - TUIChat/UI_Minimalist/Cell/CellData/Reply (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellData/Custom
+  - TUIChat/UI_Minimalist/Cell/CellUI (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellUI/Base (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Cell/CellUI/Chat (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Cell/CellUI/Custom (= 7.3.4358)
+    - TUIChat/UI_Minimalist/Cell/CellUI/Reply (= 7.3.4358)
+  - TUIChat/UI_Minimalist/Cell/CellUI/Base (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellData
+  - TUIChat/UI_Minimalist/Cell/CellUI/Chat (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellUI/Base
+  - TUIChat/UI_Minimalist/Cell/CellUI/Custom (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellUI/Chat
+  - TUIChat/UI_Minimalist/Cell/CellUI/Reply (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell/CellUI/Custom
+  - TUIChat/UI_Minimalist/Chat (7.3.4358):
+    - TUIChat/UI_Minimalist/Input
+  - TUIChat/UI_Minimalist/DataProvider (7.3.4358):
+    - TUIChat/UI_Minimalist/Cell
+  - TUIChat/UI_Minimalist/Header (7.3.4358):
+    - TUIChat/UI_Minimalist/Service
+  - TUIChat/UI_Minimalist/Input (7.3.4358):
+    - TUIChat/UI_Minimalist/DataProvider
+  - TUIChat/UI_Minimalist/Service (7.3.4358):
+    - TUIChat/UI_Minimalist/Chat
+  - TUIChat/VoiceConvert (7.3.4358)
+  - TUIContact (7.3.4358):
+    - TUIContact/ALL (= 7.3.4358)
+  - TUIContact/ALL (7.3.4358):
+    - TUIContact/UI_Classic
+    - TUIContact/UI_Minimalist
+  - TUIContact/BaseCell (7.3.4358):
+    - TUIContact/BaseCell/CellData (= 7.3.4358)
+    - TUIContact/BaseCell/CellUI (= 7.3.4358)
+  - TUIContact/BaseCell/CellData (7.3.4358):
+    - ReactiveObjC
+    - TIMCommon (= 7.3.4358)
+    - TUICore (= 7.3.4358)
+    - TXIMSDK_Plus_iOS (= 7.3.4358)
+  - TUIContact/BaseCell/CellUI (7.3.4358):
+    - TUIContact/BaseCell/CellData
+  - TUIContact/BaseDataProvider (7.3.4358):
+    - TUIContact/BaseCell
+  - TUIContact/CommonUI (7.3.4358):
+    - TUIContact/BaseDataProvider
+  - TUIContact/UI_Classic (7.3.4358):
+    - TUIContact/UI_Classic/Header (= 7.3.4358)
+    - TUIContact/UI_Classic/Service (= 7.3.4358)
+    - TUIContact/UI_Classic/UI (= 7.3.4358)
+  - TUIContact/UI_Classic/Header (7.3.4358):
+    - TUIContact/UI_Classic/Service
+  - TUIContact/UI_Classic/Service (7.3.4358):
+    - TUIContact/UI_Classic/UI
+  - TUIContact/UI_Classic/UI (7.3.4358):
+    - TUIContact/CommonUI
+  - TUIContact/UI_Minimalist (7.3.4358):
+    - TUIContact/UI_Minimalist/Cell (= 7.3.4358)
+    - TUIContact/UI_Minimalist/DataProvider (= 7.3.4358)
+    - TUIContact/UI_Minimalist/Header (= 7.3.4358)
+    - TUIContact/UI_Minimalist/Service (= 7.3.4358)
+    - TUIContact/UI_Minimalist/UI (= 7.3.4358)
+  - TUIContact/UI_Minimalist/Cell (7.3.4358):
+    - TUIContact/UI_Minimalist/Cell/CellData (= 7.3.4358)
+    - TUIContact/UI_Minimalist/Cell/CellUI (= 7.3.4358)
+  - TUIContact/UI_Minimalist/Cell/CellData (7.3.4358):
+    - TUIContact/CommonUI
+  - TUIContact/UI_Minimalist/Cell/CellUI (7.3.4358):
+    - TUIContact/UI_Minimalist/Cell/CellData
+  - TUIContact/UI_Minimalist/DataProvider (7.3.4358):
+    - TUIContact/UI_Minimalist/Cell
+  - TUIContact/UI_Minimalist/Header (7.3.4358):
+    - TUIContact/UI_Minimalist/Service
+  - TUIContact/UI_Minimalist/Service (7.3.4358):
+    - TUIContact/UI_Minimalist/UI
+  - TUIContact/UI_Minimalist/UI (7.3.4358):
+    - TUIContact/UI_Minimalist/DataProvider
+  - TUIConversation (7.3.4358):
+    - TUIConversation/ALL (= 7.3.4358)
+  - TUIConversation/ALL (7.3.4358):
+    - TUIConversation/UI_Classic
+    - TUIConversation/UI_Minimalist
+  - TUIConversation/BaseCell (7.3.4358):
+    - TUIConversation/BaseCell/CellData (= 7.3.4358)
+    - TUIConversation/BaseCell/CellUI (= 7.3.4358)
+  - TUIConversation/BaseCell/CellData (7.3.4358):
+    - TUIConversation/CommonModel
+  - TUIConversation/BaseCell/CellUI (7.3.4358):
+    - TUIConversation/BaseCell/CellData
+  - TUIConversation/BaseDataProvider (7.3.4358):
+    - TUIConversation/BaseCell
+  - TUIConversation/CommonModel (7.3.4358):
+    - ReactiveObjC
+    - TIMCommon (= 7.3.4358)
+    - TUICore (= 7.3.4358)
+    - TXIMSDK_Plus_iOS (= 7.3.4358)
+  - TUIConversation/UI_Classic (7.3.4358):
+    - TUIConversation/UI_Classic/DataProvider (= 7.3.4358)
+    - TUIConversation/UI_Classic/Header (= 7.3.4358)
+    - TUIConversation/UI_Classic/Service (= 7.3.4358)
+    - TUIConversation/UI_Classic/UI (= 7.3.4358)
+  - TUIConversation/UI_Classic/DataProvider (7.3.4358):
+    - TUIConversation/BaseDataProvider
+  - TUIConversation/UI_Classic/Header (7.3.4358):
+    - TUIConversation/UI_Classic/Service
+  - TUIConversation/UI_Classic/Service (7.3.4358):
+    - TUIConversation/UI_Classic/UI
+  - TUIConversation/UI_Classic/UI (7.3.4358):
+    - TUIConversation/UI_Classic/DataProvider
+  - TUIConversation/UI_Minimalist (7.3.4358):
+    - TUIConversation/UI_Minimalist/Cell (= 7.3.4358)
+    - TUIConversation/UI_Minimalist/DataProvider (= 7.3.4358)
+    - TUIConversation/UI_Minimalist/Header (= 7.3.4358)
+    - TUIConversation/UI_Minimalist/Service (= 7.3.4358)
+    - TUIConversation/UI_Minimalist/UI (= 7.3.4358)
+  - TUIConversation/UI_Minimalist/Cell (7.3.4358):
+    - TUIConversation/UI_Minimalist/Cell/CellData (= 7.3.4358)
+    - TUIConversation/UI_Minimalist/Cell/CellUI (= 7.3.4358)
+  - TUIConversation/UI_Minimalist/Cell/CellData (7.3.4358):
+    - TUIConversation/BaseDataProvider
+  - TUIConversation/UI_Minimalist/Cell/CellUI (7.3.4358):
+    - TUIConversation/UI_Minimalist/Cell/CellData
+  - TUIConversation/UI_Minimalist/DataProvider (7.3.4358):
+    - TUIConversation/UI_Minimalist/Cell
+  - TUIConversation/UI_Minimalist/Header (7.3.4358):
+    - TUIConversation/UI_Minimalist/Service
+  - TUIConversation/UI_Minimalist/Service (7.3.4358):
+    - TUIConversation/UI_Minimalist/UI
+  - TUIConversation/UI_Minimalist/UI (7.3.4358):
+    - TUIConversation/UI_Minimalist/DataProvider
+  - TUIConversationGroupPlugin (7.3.4358)
+  - TUIConversationMarkPlugin (7.3.4358)
+  - TUICore (7.3.4358):
+    - ReactiveObjC
+    - SDWebImage
+    - TUICore/ImSDK_Plus (= 7.3.4358)
+  - TUICore/Base (7.3.4358):
+    - ReactiveObjC
+    - SDWebImage
+  - TUICore/ImSDK_Plus (7.3.4358):
+    - ReactiveObjC
+    - SDWebImage
+    - TUICore/Base
+    - TXIMSDK_Plus_iOS (= 7.3.4358)
+  - TUIGroup (7.3.4358):
+    - TUIGroup/ALL (= 7.3.4358)
+  - TUIGroup/ALL (7.3.4358):
+    - TUIGroup/UI_Classic
+    - TUIGroup/UI_Minimalist
+  - TUIGroup/BaseCell (7.3.4358):
+    - TUIGroup/BaseCell/CellData (= 7.3.4358)
+    - TUIGroup/BaseCell/CellUI (= 7.3.4358)
+  - TUIGroup/BaseCell/CellData (7.3.4358):
+    - TUIGroup/CommonModel
+  - TUIGroup/BaseCell/CellUI (7.3.4358):
+    - TUIGroup/BaseCell/CellData
+  - TUIGroup/BaseDataProvider (7.3.4358):
+    - TUIGroup/BaseCell
+  - TUIGroup/CommonModel (7.3.4358):
+    - ReactiveObjC
+    - TIMCommon (= 7.3.4358)
+    - TUICore (= 7.3.4358)
+    - TXIMSDK_Plus_iOS (= 7.3.4358)
+  - TUIGroup/CommonUI (7.3.4358):
+    - TUIGroup/BaseDataProvider
+  - TUIGroup/UI_Classic (7.3.4358):
+    - TUIGroup/UI_Classic/Header (= 7.3.4358)
+    - TUIGroup/UI_Classic/Service (= 7.3.4358)
+    - TUIGroup/UI_Classic/UI (= 7.3.4358)
+  - TUIGroup/UI_Classic/Header (7.3.4358):
+    - TUIGroup/UI_Classic/Service
+  - TUIGroup/UI_Classic/Service (7.3.4358):
+    - TUIGroup/UI_Classic/UI
+  - TUIGroup/UI_Classic/UI (7.3.4358):
+    - TUIGroup/CommonUI
+  - TUIGroup/UI_Minimalist (7.3.4358):
+    - TUIGroup/UI_Minimalist/Cell (= 7.3.4358)
+    - TUIGroup/UI_Minimalist/DataProvider (= 7.3.4358)
+    - TUIGroup/UI_Minimalist/Header (= 7.3.4358)
+    - TUIGroup/UI_Minimalist/Service (= 7.3.4358)
+    - TUIGroup/UI_Minimalist/UI (= 7.3.4358)
+  - TUIGroup/UI_Minimalist/Cell (7.3.4358):
+    - TUIGroup/UI_Minimalist/Cell/CellData (= 7.3.4358)
+    - TUIGroup/UI_Minimalist/Cell/CellUI (= 7.3.4358)
+  - TUIGroup/UI_Minimalist/Cell/CellData (7.3.4358):
+    - TUIGroup/CommonUI
+  - TUIGroup/UI_Minimalist/Cell/CellUI (7.3.4358):
+    - TUIGroup/UI_Minimalist/Cell/CellData
+  - TUIGroup/UI_Minimalist/DataProvider (7.3.4358):
+    - TUIGroup/UI_Minimalist/Cell
+  - TUIGroup/UI_Minimalist/Header (7.3.4358):
+    - TUIGroup/UI_Minimalist/Service
+  - TUIGroup/UI_Minimalist/Service (7.3.4358):
+    - TUIGroup/UI_Minimalist/UI
+  - TUIGroup/UI_Minimalist/UI (7.3.4358):
+    - TUIGroup/UI_Minimalist/DataProvider
+  - TUIGroupNotePlugin (7.3.4358)
+  - TUIOfflinePush (7.3.4358):
+    - TUIOfflinePush/APNS (= 7.3.4358)
+  - TUIOfflinePush/APNS (7.3.4358):
+    - TUIOfflinePush/Base
+  - TUIOfflinePush/Base (7.3.4358):
+    - TUICore (= 7.3.4358)
+    - TXIMSDK_Plus_iOS (= 7.3.4358)
+  - TUIPollPlugin (7.3.4358)
+  - TUIRoomEngine/TRTC (1.3.3):
+    - TXIMSDK_Plus_iOS (>= 7.2.4123)
+    - TXLiteAVSDK_TRTC (~> 11.2.14217)
+  - TUIRoomKit (1.3.3):
+    - SnapKit
+    - TIMCommon
+    - TUICore (>= 7.3.4358)
+    - TUIRoomKit/TRTC (= 1.3.3)
+  - TUIRoomKit/TRTC (1.3.3):
+    - SnapKit
+    - TIMCommon
+    - TUICore (>= 7.3.4358)
+    - TUIRoomEngine/TRTC (= 1.3.3)
+  - TUISearch (7.3.4358):
+    - TUISearch/ALL (= 7.3.4358)
+  - TUISearch/ALL (7.3.4358):
+    - TUISearch/UI_Classic
+    - TUISearch/UI_Minimalist
+  - TUISearch/BaseCell (7.3.4358):
+    - TUISearch/BaseCell/CellData (= 7.3.4358)
+    - TUISearch/BaseCell/CellUI (= 7.3.4358)
+  - TUISearch/BaseCell/CellData (7.3.4358):
+    - TIMCommon (= 7.3.4358)
+    - TUICore (= 7.3.4358)
+    - TXIMSDK_Plus_iOS (= 7.3.4358)
+  - TUISearch/BaseCell/CellUI (7.3.4358):
+    - TUISearch/BaseCell/CellData
+  - TUISearch/BaseDataProvider (7.3.4358):
+    - TUISearch/BaseCell
+  - TUISearch/UI_Classic (7.3.4358):
+    - TUISearch/UI_Classic/Header (= 7.3.4358)
+    - TUISearch/UI_Classic/Service (= 7.3.4358)
+    - TUISearch/UI_Classic/UI (= 7.3.4358)
+  - TUISearch/UI_Classic/Header (7.3.4358):
+    - TUISearch/UI_Classic/Service
+  - TUISearch/UI_Classic/Service (7.3.4358):
+    - TUISearch/UI_Classic/UI
+  - TUISearch/UI_Classic/UI (7.3.4358):
+    - TUISearch/BaseDataProvider
+  - TUISearch/UI_Minimalist (7.3.4358):
+    - TUISearch/UI_Minimalist/Cell (= 7.3.4358)
+    - TUISearch/UI_Minimalist/Header (= 7.3.4358)
+    - TUISearch/UI_Minimalist/Service (= 7.3.4358)
+    - TUISearch/UI_Minimalist/UI (= 7.3.4358)
+  - TUISearch/UI_Minimalist/Cell (7.3.4358):
+    - TUISearch/UI_Minimalist/Cell/CellUI (= 7.3.4358)
+  - TUISearch/UI_Minimalist/Cell/CellUI (7.3.4358):
+    - TUISearch/BaseDataProvider
+  - TUISearch/UI_Minimalist/Header (7.3.4358):
+    - TUISearch/UI_Minimalist/Service
+  - TUISearch/UI_Minimalist/Service (7.3.4358):
+    - TUISearch/UI_Minimalist/UI
+  - TUISearch/UI_Minimalist/UI (7.3.4358):
+    - TUISearch/UI_Minimalist/Cell
+  - TUITranslationPlugin (7.3.4358):
+    - TUITranslationPlugin/CommonModel (= 7.3.4358)
+    - TUITranslationPlugin/UI (= 7.3.4358)
+  - TUITranslationPlugin/CommonModel (7.3.4358):
+    - TIMCommon (= 7.3.4358)
+    - TUIChat (= 7.3.4358)
+    - TUICore (= 7.3.4358)
+  - TUITranslationPlugin/UI (7.3.4358):
+    - TUITranslationPlugin/UI/DataProvider (= 7.3.4358)
+    - TUITranslationPlugin/UI/Service (= 7.3.4358)
+    - TUITranslationPlugin/UI/UI (= 7.3.4358)
+  - TUITranslationPlugin/UI/DataProvider (7.3.4358):
+    - TUITranslationPlugin/CommonModel
+  - TUITranslationPlugin/UI/Service (7.3.4358):
+    - TUITranslationPlugin/UI/UI
+  - TUITranslationPlugin/UI/UI (7.3.4358):
+    - TUITranslationPlugin/UI/DataProvider
+  - TUIVideoSeat (1.3.3):
+    - SnapKit
+    - TUICore
+    - TUIVideoSeat/TRTC (= 1.3.3)
+  - TUIVideoSeat/TRTC (1.3.3):
+    - SnapKit
+    - TUICore
+    - TUIRoomEngine/TRTC
+  - TXIMSDK_Plus_iOS (7.3.4358)
+  - TXLiteAVSDK_TRTC (11.2.14217):
+    - TXLiteAVSDK_TRTC/TRTC (= 11.2.14217)
+  - TXLiteAVSDK_TRTC/TRTC (11.2.14217)
+
+DEPENDENCIES:
+  - Masonry
+  - MJRefresh
+  - TIMCommon (= 7.3.4358)
+  - TUICallKit
+  - TUIChat (= 7.3.4358)
+  - TUIContact (= 7.3.4358)
+  - TUIConversation (= 7.3.4358)
+  - TUIConversationGroupPlugin (= 7.3.4358)
+  - TUIConversationMarkPlugin (= 7.3.4358)
+  - TUIGroup (= 7.3.4358)
+  - TUIGroupNotePlugin (= 7.3.4358)
+  - TUIOfflinePush (= 7.3.4358)
+  - TUIPollPlugin (= 7.3.4358)
+  - TUIRoomKit (= 1.3.3)
+  - TUISearch (= 7.3.4358)
+  - TUITranslationPlugin (= 7.3.4358)
+  - TUIVideoSeat (= 1.3.3)
+
+SPEC REPOS:
+  https://github.com/CocoaPods/Specs.git:
+    - Masonry
+    - MJRefresh
+    - ReactiveObjC
+    - SDWebImage
+    - SnapKit
+    - TIMCommon
+    - TUICallEngine
+    - TUICallKit
+    - TUIChat
+    - TUIContact
+    - TUIConversation
+    - TUIConversationGroupPlugin
+    - TUIConversationMarkPlugin
+    - TUICore
+    - TUIGroup
+    - TUIGroupNotePlugin
+    - TUIOfflinePush
+    - TUIPollPlugin
+    - TUIRoomEngine
+    - TUIRoomKit
+    - TUISearch
+    - TUITranslationPlugin
+    - TUIVideoSeat
+    - TXIMSDK_Plus_iOS
+    - TXLiteAVSDK_TRTC
+
+SPEC CHECKSUMS:
+  Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
+  MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
+  ReactiveObjC: 011caa393aa0383245f2dcf9bf02e86b80b36040
+  SDWebImage: 2aea163b50bfcb569a2726b6a754c54a4506fcf6
+  SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
+  TIMCommon: 2adea2895422a640e100125f6fccc0dc2aeff44b
+  TUICallEngine: b9b05339ff29795b085b69ac9150572862d496a6
+  TUICallKit: 65f50c203be2ed32a8dfa90096c21c96a26ed4f9
+  TUIChat: 557dd6872606d9da7f36913af92ee95c8e651795
+  TUIContact: 0079dd736935a77e6c14c864e516232cb70466bd
+  TUIConversation: 643823f80f0958b7263ac24411e397fcd5f37e78
+  TUIConversationGroupPlugin: fcbc7cc209344c317b9c959bbb0c53406381ea28
+  TUIConversationMarkPlugin: b5fe6ceb0539d56e0f7bc31369acbc04b88afa3f
+  TUICore: b0e525287eb03f95fe648a696c9ffb253fc87098
+  TUIGroup: 6a4133f356bd240997ac11bb94f89648899096f7
+  TUIGroupNotePlugin: 0eb4c63bea50ab114c791246191f938a879e1905
+  TUIOfflinePush: e5787da66713361da4ed64b90ca196c094f483de
+  TUIPollPlugin: 39348e13214dd729b15061e72bdc8c5ecf6ea352
+  TUIRoomEngine: c43a8dc4814427bf0ad5102ec322ea4befc6c1a9
+  TUIRoomKit: 8cb60abb9f59f263c0e08250113dc931816e5156
+  TUISearch: 18a208d0ef13eb7bf7f44eae01ffefb26803aaf3
+  TUITranslationPlugin: 87b045f947f933e3e5b619bde823e762327859cf
+  TUIVideoSeat: 78ed5cae8cba3318e9552102fd5f6281f1845052
+  TXIMSDK_Plus_iOS: bc72c7cec1b5e975c3cc6629692c849513a932f5
+  TXLiteAVSDK_TRTC: cdab9adefc42a5e0a4fea4035e624af441ba3e83
+
+PODFILE CHECKSUM: eb96371d427453c90cace4428d58d6938f136327
+
+COCOAPODS: 1.11.3

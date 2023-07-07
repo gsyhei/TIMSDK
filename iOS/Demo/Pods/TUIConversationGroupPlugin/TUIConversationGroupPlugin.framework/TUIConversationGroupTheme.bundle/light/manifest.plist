@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>id</key>
+	<string>light</string>
+	<key>name</key>
+	<string>轻量</string>
+	<key>name_en</key>
+	<string>Light</string>
+	<key>group_window_bg_color</key>
+	<string>#FFFFFF</string>
+	<key>group_title_color</key>
+	<string>#000000</string>
+	<key>group_manager_title_color</key>
+	<string>#147AFF</string>
+	<key>group_select_title_color</key>
+	<string>#006EFF</string>
+	<key>group_select_border_color</key>
+	<string>#EEEEEE</string>
+	<key>group_unselect_title_color</key>
+	<string>#666666</string>
+	<key>group_unselect_bg_color</key>
+	<string>#EBECF0</string>
+	<key>group_add_title_color</key>
+	<string>#006EFF</string>
+	<key>group_edit_title_color</key>
+	<string>#006EFF</string>
+	<key>tableview_bg_color</key>
+	<string>#F2F3F5</string>
+	<key>tableview_section_title_color</key>
+	<string>#888888</string>
+	<key>group_normal_cell_title_color</key>
+	<string>#444444</string>
+	<key>group_input_cell_title_color</key>
+	<string>#000000</string>
+	<key>group_add_img</key>
+	<string>group_add</string>
+	<key>group_close_img</key>
+	<string>group_close</string>
+	<key>group_edit_img</key>
+	<string>group_edit</string>
+	<key>group_manager_img</key>
+	<string>group_manager</string>
+	<key>group_select_img</key>
+	<string>group_select</string>
+	<key>group_set_img</key>
+	<string>group_set</string>
+</dict>
+</plist>

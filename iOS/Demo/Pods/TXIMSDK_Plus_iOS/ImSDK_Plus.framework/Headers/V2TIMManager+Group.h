@@ -10,14 +10,20 @@
 
 #import "V2TIMManager.h"
 #import "V2TIMManager+Message.h"
+#import "V2TIMManager+Conversation.h"
+
 @class V2TIMGroupMemberOperationResult;
 @class V2TIMGroupApplicationResult;
 @class V2TIMCreateGroupMemberInfo;
 @class V2TIMGroupInfo;
 @class V2TIMGroupInfoResult;
+@class V2TIMTopicInfo;
+@class V2TIMTopicInfoResult;
+@class V2TIMTopicOperationResult;
 @class V2TIMGroupApplication;
 @class V2TIMGroupSearchParam;
 @class V2TIMGroupMemberSearchParam;
+@class V2TIMGroupAtInfo;
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -25,7 +31,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-@interface V2TIMManager (Group)
+V2TIM_EXPORT @interface V2TIMManager (Group)
 
 /// 获取已加入群列表成功回调
 typedef void (^V2TIMGroupInfoListSucc)(NSArray<V2TIMGroupInfo *> *groupList);
@@ -45,6 +51,14 @@ typedef void (^V2TIMGroupMemberOperationResultListSucc)(NSArray<V2TIMGroupMember
 typedef void (^V2TIMGroupApplicationResultSucc)(V2TIMGroupApplicationResult *result);
 /// 获取群在线人数成功回调
 typedef void (^V2TIMGroupOnlineMemberCountSucc)(NSInteger count);
+/// 操作话题列表结果
+typedef void(^V2TIMTopicOperationResultSucc)(NSMutableArray<V2TIMTopicOperationResult *> *resultList);
+/// 获取话题列表结果
+typedef void(^V2TIMTopicInfoResultListSucc)(NSMutableArray<V2TIMTopicInfoResult *> *resultList);
+/// 创建话题成功回调
+typedef void (^V2TIMCreateTopicSucc)(NSString * topicID);
+/// 群计数器操作成功的回调
+typedef void (^V2TIMGroupCounterResultSucc)(NSDictionary<NSString *, NSNumber *> *groupCounters);
 
 /// 加群选项
 typedef NS_ENUM(NSInteger, V2TIMGroupAddOpt) {
@@ -58,7 +72,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupMemberResult) {
     V2TIM_GROUP_MEMBER_RESULT_FAIL         = 0,  ///< 操作失败
     V2TIM_GROUP_MEMBER_RESULT_SUCC         = 1,  ///< 操作成功
     V2TIM_GROUP_MEMBER_RESULT_INVALID      = 2,  ///< 无效操作，加群时已经是群成员，移除群组时不在群内
-    V2TIM_GROUP_MEMBER_RESULT_PENDING      = 3,  ///< 等待处理，邀请入群时等待对方处理
+    V2TIM_GROUP_MEMBER_RESULT_PENDING      = 3,  ///< 等待处理，邀请入群时等待审批
     V2TIM_GROUP_MEMBER_RESULT_OVERLIMIT    = 4,  ///< 操作失败，创建群指定初始群成员列表或邀请入群时，被邀请者加入的群总数超限
 };
 
@@ -71,9 +85,10 @@ typedef NS_ENUM(NSInteger, V2TIMGroupMemberFilter) {
 };
 
 /// 群组未决请求类型
-typedef NS_ENUM(NSInteger, V2TIMGroupApplicationGetType) {
-    V2TIM_GROUP_APPLICATION_GET_TYPE_JOIN   = 0x0,  ///< 申请入群
-    V2TIM_GROUP_APPLICATION_GET_TYPE_INVITE = 0x1,  ///< 邀请入群
+typedef NS_ENUM(NSInteger, V2TIMGroupApplicationType) {
+    V2TIM_GROUP_JOIN_APPLICATION_NEED_APPROVED_BY_ADMIN   = 0x0,         ///< 需要群主或管理员审批的申请加群请求
+    V2TIM_GROUP_INVITE_APPLICATION_NEED_APPROVED_BY_INVITEE   = 0x1,     ///< 需要被邀请者同意的邀请入群请求
+    V2TIM_GROUP_INVITE_APPLICATION_NEED_APPROVED_BY_ADMIN   = 0x2,       ///< 需要群主或管理员审批的邀请入群请求
 };
 
 /// 群组已决标志
@@ -99,7 +114,9 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
  *  @param info 自定义群组信息，可以设置 groupID | groupType | groupName | notification | introduction | faceURL 字段
  *  @param memberList 指定初始的群成员（直播群 AVChatRoom 不支持指定初始群成员，memberList 请传 nil）
  *
- *  @note 其他限制请参考 V2TIMManager.h -> createGroup 注释
+ *  @note
+ *  - 后台限制邀请的群成员个数不能超过 20
+ *  - 其他限制请参考 V2TIMManager.h -> createGroup 注释
  */
 - (void)createGroup:(V2TIMGroupInfo*)info memberList:(NSArray<V2TIMCreateGroupMemberInfo *>*) memberList succ:(V2TIMCreateGroupSucc)succ fail:(V2TIMFail)fail;
 
@@ -124,9 +141,8 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 - (void)getGroupsInfo:(NSArray<NSString *> *)groupIDList succ:(V2TIMGroupInfoResultListSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  2.2 搜索群列表（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
- *
- *  SDK 会搜索群名称包含于关键字列表 keywordList 的所有群并返回群信息列表。关键字列表最多支持5个。
+ *  2.2 搜索群列表（5.4.666 及以上版本支持）
+ * @note 该功能为 IM 旗舰版功能，[购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17474)后可使用，详见[价格说明](https://cloud.tencent.com/document/product/269/11673?from=17176#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85)
  */
 - (void)searchGroups:(V2TIMGroupSearchParam *)searchParam succ:(V2TIMGroupInfoListSucc)succ fail:(V2TIMFail)fail;
 
@@ -140,7 +156,9 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
  *
  * @note
  * attributes 的使用限制如下：
- *  - 目前只支持 AVChatRoom；
+ *  - 6.7 及其以前版本，只支持 AVChatRoom 直播群；
+ *  - 从 6.8 版本开始，同时支持 AVChatRoom、Public、Meeting、Work 四种群类型；
+ *  - 从 7.0 版本开始，除了话题外，群属性支持所有的群类型；
  *  - key 最多支持 16 个，长度限制为 32 字节；
  *  - value 长度限制为 4k；
  *  - 总的 attributes（包括 key 和 value）限制为 16k；
@@ -154,21 +172,27 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 /**
  *  2.5 设置群属性，已有该群属性则更新其 value 值，没有该群属性则添加该群属性。
  *  @note
- *   - 目前只支持 AVChatRoom；
+ *   - 6.7 及其以前版本，只支持 AVChatRoom 直播群；
+ *   - 从 6.8 版本开始，同时支持 AVChatRoom、Public、Meeting、Work 四种群类型；
+ *   - 从 7.0 版本开始，除了话题外，群属性支持所有的群类型。
  */
 - (void)setGroupAttributes:(NSString*)groupID attributes:(NSDictionary<NSString *,NSString *> *)attributes succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
  *  2.6 删除群指定属性，keys 传 nil 则清空所有群属性。
  *  @note
- *   - 目前只支持 AVChatRoom；
+ *   - 6.7 及其以前版本，只支持 AVChatRoom 直播群；
+ *   - 从 6.8 版本开始，同时支持 AVChatRoom、Public、Meeting、Work 四种群类型；
+ *   - 从 7.0 版本开始，除了话题外，群属性支持所有的群类型。
  */
 - (void)deleteGroupAttributes:(NSString*)groupID keys:(NSArray<NSString *> *)keys succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
  *  2.7 获取群指定属性，keys 传 nil 则获取所有群属性。
  *  @note
- *   - 目前只支持 AVChatRoom；
+ *   - 6.7 及其以前版本，只支持 AVChatRoom 直播群；
+ *   - 从 6.8 版本开始，同时支持 AVChatRoom、Public、Meeting、Work 四种群类型；
+ *   - 从 7.0 版本开始，除了话题外，群属性支持所有的群类型。
  */
 - (void)getGroupAttributes:(NSString*)groupID keys:(NSArray<NSString *> *)keys succ:(V2TIMGroupAttributeListSucc)succ fail:(V2TIMFail)fail;
 
@@ -180,11 +204,59 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
  * @param fail 失败回调
  *
  * @note 请注意
- * - 目前只支持：直播群（ AVChatRoom）。
- * - 该接口有频限检测，SDK 限制调用频率为60秒1次。
+ * - IMSDK 7.3 以前的版本仅支持直播群（ AVChatRoom）；
+ * - IMSDK 7.3 及其以后的版本支持所有群类型。
  */
 - (void)getGroupOnlineMemberCount:(NSString*)groupID succ:(V2TIMGroupOnlineMemberCountSucc)succ fail:(V2TIMFail)fail;
 
+/**
+ * 2.9 设置群计数器（7.0 及其以上版本支持）
+ *
+ * @note
+ *  - 该计数器的 key 如果存在，则直接更新计数器的 value 值；如果不存在，则添加该计数器的 key-value；
+ *  - 当群计数器设置成功后，在 succ 回调中会返回最终成功设置的群计数器信息；
+ *  - 除了社群和话题，群计数器支持所有的群组类型。
+ */
+- (void)setGroupCounters:(NSString *)groupID counters:(NSDictionary<NSString *, NSNumber *> *)counters succ:(V2TIMGroupCounterResultSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ * 2.10 获取群计数器（7.0 及其以上版本支持）
+ *
+ * @note
+ *  - 如果 keys 为空，则表示获取群内的所有计数器；
+ *  - 除了社群和话题，群计数器支持所有的群组类型。
+ */
+- (void)getGroupCounters:(NSString *)groupID keys:(NSArray<NSString *> *)keys succ:(V2TIMGroupCounterResultSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ * 2.11 递增群计数器（7.0 及其以上版本支持）
+ *
+ * @param groupID 群 ID
+ * @param key 群计数器的 key
+ * @param value 群计数器的递增的变化量，计数器 key 对应的 value 变更方式为： new_value = old_value + value
+ * @param succ 成功后的回调，会返回当前计数器做完递增操作后的 value
+ * @param fail 失败的回调
+ *
+ * @note
+ *  - 该计数器的 key 如果存在，则直接在当前值的基础上根据传入的 value 作递增操作；反之，添加 key，并在默认值为 0 的基础上根据传入的 value 作递增操作；
+ *  - 除了社群和话题，群计数器支持所有的群组类型。
+ */
+- (void)increaseGroupCounter:(NSString *)groupID key:(NSString *)key value:(NSInteger)value succ:(V2TIMGroupCounterResultSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ * 2.12 递减群计数器（7.0 及其以上版本支持）
+ *
+ * @param groupID 群 ID
+ * @param key 群计数器的 key
+ * @param value 群计数器的递减的变化量，计数器 key 对应的 value 变更方式为： new_value = old_value - value
+ * @param succ 成功后的回调，会返回当前计数器做完递减操作后的 value
+ * @param fail 失败的回调
+ *
+ * @note
+ *  - 该计数器的 key 如果存在，则直接在当前值的基础上根据传入的 value 作递减操作；反之，添加 key，并在默认值为 0 的基础上根据传入的 value 作递减操作
+ *  - 除了社群和话题，群计数器支持所有的群组类型。
+ */
+- (void)decreaseGroupCounter:(NSString *)groupID key:(NSString *)key value:(NSInteger)value succ:(V2TIMGroupCounterResultSucc)succ fail:(V2TIMFail)fail;
 
 /////////////////////////////////////////////////////////////////////////////////
 //                         群成员管理
@@ -192,13 +264,18 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 /**
  *  3.1 获取群成员列表
  *
- *  @param filter   指定群成员类型（V2TIMGroupMemberFilter）。
- *  @param nextSeq  分页拉取标志，第一次拉取填0，回调成功如果 nextSeq 不为零，需要分页，传入再次拉取，直至为 0。
+ *  @param filter   指定群成员类型。
+ *  @param nextSeq  分页拉取标志，第一次拉取填 0，回调成功如果 nextSeq 不为零，需要分页，传入再次拉取，直至为 0。
  *
- *  @note 直播群（AVChatRoom）的特殊限制：
- *  - 不支持管理员角色的拉取，群成员个数最大只支持 31 个（新进来的成员会排前面），用户每次登录后，都需要重新加入群组，否则拉取群成员会报 10007 错误码。
- *  - 群成员资料信息仅支持 userID | nickName | faceURL | role 字段。
- *  - role 字段不支持管理员角色，如果您的业务逻辑依赖于管理员角色，可以使用群自定义字段 groupAttributes 管理该角色。
+ *  @note
+ *  - 普通群（工作群、会议群、公开群、社群）的限制：
+ *  1. filter 只能设置为 V2TIMGroupMemberFilter 定义的数值，SDK 会返回指定角色的成员。
+ *
+ *  - 直播群（AVChatRoom）的限制：
+ *  1. 如果设置 filter 为 V2TIMGroupMemberFilter 定义的数值，SDK 返回全部成员。返回的人数规则为：旗舰版支持拉取最近入群群成员最多 1000 人，新进来的成员排在前面（6.3 及以上版本支持，需要先在 [控制台](https://console.cloud.tencent.com/im) 开启开关；非旗舰版支持拉取最近入群群成员最多 31 人，新进来的成员排在前面。
+ *  2. 如果设置 filter 为群成员自定义标记，旗舰版支持拉取指定标记的成员列表。标记群成员的设置请参考 markGroupMemberList:memberList:markType:enableMark:succ:fail: API。
+ *  3. 程序重启后，请重新加入群组，否则拉取群成员会报 10007 错误码。
+ *  4. 群成员资料信息仅支持 userID | nickName | faceURL | role 字段。
  */
 - (void)getGroupMemberList:(NSString*)groupID filter:(uint32_t)filter nextSeq:(uint64_t)nextSeq succ:(V2TIMGroupMemberInfoResultSucc)succ fail:(V2TIMFail)fail;
 
@@ -208,11 +285,10 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 - (void)getGroupMembersInfo:(NSString*)groupID memberList:(NSArray<NSString*>*)memberList succ:(V2TIMGroupMemberInfoListSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  3.3 搜索指定的群成员资料（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
- *
- *  SDK 会在本地搜索指定群 ID 列表中，群成员信息（名片、好友备注、昵称、userID）包含于关键字列表 keywordList 的所有群成员并返回群 ID 和群成员列表的 map，关键字列表最多支持5个。
+ *  3.3 搜索指定的群成员资料（5.4.666 及以上版本支持）
  *
  * @param searchParam 搜索参数
+ * @note 该功能为 IM 旗舰版功能，[购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17474)后可使用，详见[价格说明](https://cloud.tencent.com/document/product/269/11673?from=17176#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85)
  */
 - (void)searchGroupMembers:(V2TIMGroupMemberSearchParam *)searchParam
                       succ:(V2TIMGroupMemberInfoListSearchSucc)succ
@@ -224,6 +300,8 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 
 /**
  *  3.5 禁言（只有管理员或群主能够调用）
+ *
+ *  @param seconds 禁言时间长度，单位秒，表示调用该接口成功后多少秒内不允许被禁言用户再发言。
  */
 - (void)muteGroupMember:(NSString*)groupID member:(NSString*)userID muteTime:(uint32_t)seconds succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
@@ -232,20 +310,30 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
  *
  *  @note 请注意不同类型的群有如下限制：
  *  - 工作群（Work）：群里的任何人都可以邀请其他人进群。
- *  - 会议群（Meeting）和公开群（Public）：只有通过rest api 使用 App 管理员身份才可以邀请其他人进群。
+ *  - 会议群（Meeting）和公开群（Public）：默认不允许邀请加入群，您可以修改群资料 V2TIMGroupInfo 的 groupApproveOpt 字段打开邀请入群方式。打开该选项之后，群里的任何人都可以邀请其他人进群。
  *  - 直播群（AVChatRoom）：不支持此功能。
+ *  - 后台限制单次邀请的群成员个数不能超过 20。
  */
 - (void)inviteUserToGroup:(NSString*)groupID userList:(NSArray<NSString *>*)userList succ:(V2TIMGroupMemberOperationResultListSucc)succ fail:(V2TIMFail)fail;
 
 /**
  *  3.7 踢人
  *
- *  @note 请注意不同类型的群有如下限制：
- * - 工作群（Work）：只有群主或 APP 管理员可以踢人。
- * - 公开群（Public）、会议群（Meeting）：群主、管理员和 APP 管理员可以踢人
- * - 直播群（AVChatRoom）：只支持禁言（muteGroupMember），不支持踢人。
+ *  @param groupID 群 id
+ *  @param memberList 被踢用户的 userID 列表
+ *  @param reason 被踢的原因
+ *  @param duration 指定自被踢出群组开始算起，禁止被踢用户重新申请加群的时长，单位：秒
+ *  @param succ 成功后的回调
+ *  @param fail 失败后的回调
+ *
+ *  @note
+ *  - 从 7.2 版本开始，支持设置一个时长参数，用于指定用户从被踢出群组开始算起，禁止重新申请加群的时长；
+ *  - 工作群（Work）：只有群主或 APP 管理员可以踢人；
+ *  - 公开群（Public）、会议群（Meeting）：群主、管理员和 APP 管理员可以踢人；
+ *  - 直播群（AVChatRoom）：6.6 之前版本只支持禁言（muteGroupMember），不支持踢人。6.6 及以上版本支持禁言和踢人。需要您购买旗舰版套餐；
+ *  - 该接口其他使用限制请查阅：https://cloud.tencent.com/document/product/269/75400#.E8.B8.A2.E4.BA.BA。
  */
-- (void)kickGroupMember:(NSString*)groupID memberList:(NSArray<NSString *>*)memberList reason:(NSString*)reason succ:(V2TIMGroupMemberOperationResultListSucc)succ fail:(V2TIMFail)fail;
+- (void)kickGroupMember:(NSString *)groupID memberList:(NSArray<NSString *> *)memberList reason:(NSString *)reason duration:(uint32_t)duration succ:(V2TIMGroupMemberOperationResultListSucc)succ fail:(V2TIMFail)fail;
 
 /**
  *  3.8 切换群成员的角色
@@ -260,7 +348,20 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 - (void)setGroupMemberRole:(NSString*)groupID member:(NSString *)userID newRole:(uint32_t)role succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
 /**
- *  3.9 转让群主
+ *  3.9 标记群成员(从 6.6 版本开始支持，需要您购买旗舰版套餐)
+ *
+ *  @param groupID 群 ID。
+ *  @param memberList 群成员 ID 列表。
+ *  @param markType 标记类型。数字类型，大于等于 1000，您可以自定义，一个直播群里最多允许定义 10 个标记。
+ *  @param enableMark YES 表示添加标记，NO 表示移除标记。
+ *  @note 请注意
+ *  - 仅支持直播群。
+ *  - 只有群主才有权限标记群组中其他人。
+ */
+- (void)markGroupMemberList:(NSString *)groupID memberList:(NSArray<NSString *> *)memberList markType:(uint32_t)markType enableMark:(BOOL)enableMark succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ *  3.10 转让群主
  *
  *  @note 请注意不同类型的群有如下限制：
  *  - 普通类型的群（Work、Public、Meeting）：只有群主才有权限进行群转让操作。
@@ -268,6 +369,17 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
  */
 - (void)transferGroupOwner:(NSString*)groupID member:(NSString*)userID succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
+/**
+ *  3.11 踢人（直播群踢人从 6.6 版本开始支持，需要您购买旗舰版套餐）
+ *
+ *  @note 使用限制如下：
+ * - 待废弃接口，请使用 kickGroupMember:memberList:reason:duration:succ:fail: 接口；
+ * - 工作群（Work）：只有群主或 APP 管理员可以踢人；
+ * - 公开群（Public）、会议群（Meeting）：群主、管理员和 APP 管理员可以踢人；
+ * - 直播群（AVChatRoom）：6.6 之前版本只支持禁言（muteGroupMember），不支持踢人。6.6 及以上版本支持禁言和踢人；
+ * - 该接口其他使用限制请查阅：https://cloud.tencent.com/document/product/269/75400#.E8.B8.A2.E4.BA.BA。
+ */
+- (void)kickGroupMember:(NSString *)groupID memberList:(NSArray<NSString *> *)memberList reason:(NSString *)reason succ:(V2TIMGroupMemberOperationResultListSucc)succ fail:(V2TIMFail)fail __attribute__((deprecated("use kickGroupMember:memberList:reason:duration:succ:fail:")));
 
 /////////////////////////////////////////////////////////////////////////////////
 //                         加群申请
@@ -275,6 +387,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 
 /**
  * 4.1 获取加群申请列表
+ * @note 最多支持50个
 */
 - (void)getGroupApplicationList:(V2TIMGroupApplicationResultSucc)succ fail:(V2TIMFail)fail;
 
@@ -293,8 +406,36 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
  */
 - (void)setGroupApplicationRead:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
-@end
+/////////////////////////////////////////////////////////////////////////////////
+//                         社群-话题
+/////////////////////////////////////////////////////////////////////////////////
+/**
+ * 5.1 获取当前用户已经加入的支持话题的社群列表
+ */
+- (void)getJoinedCommunityList:(V2TIMGroupInfoListSucc)succ fail:(V2TIMFail)fail;
 
+/**
+ * 5.2 创建话题
+ */
+- (void)createTopicInCommunity:(NSString *)groupID topicInfo:(V2TIMTopicInfo *)topicInfo succ:(V2TIMCreateTopicSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ * 5.3 删除话题
+ */
+- (void)deleteTopicFromCommunity:(NSString *)groupID topicIDList:(NSArray<NSString *>*)topicIDList succ:(V2TIMTopicOperationResultSucc)succ fail:(V2TIMFail)fail;
+
+/**
+ * 5.4 修改话题信息
+ */
+- (void)setTopicInfo:(V2TIMTopicInfo *)topicInfo succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+
+/**
+  * 5.5 获取话题列表。
+  * @note: topicIDList 传空时，获取此社群下的所有话题列表
+  */
+- (void)getTopicInfoList:(NSString *)groupID topicIDList:(NSArray<NSString *>*)topicIDList succ:(V2TIMTopicInfoResultListSucc)succ fail:(V2TIMFail)fail;
+
+@end
 
 /////////////////////////////////////////////////////////////////////////////////
 //
@@ -302,7 +443,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 群资料
-@interface V2TIMGroupInfo : NSObject
+V2TIM_EXPORT @interface V2TIMGroupInfo : NSObject
 
 /**
  * 群组 ID
@@ -313,6 +454,12 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 
 /// 群类型
 @property(nonatomic,strong) NSString* groupType;
+
+/**
+ * 社群是否支持创建话题
+ * @note 只在群类型为 Community 时有效
+ */
+@property(nonatomic,assign) BOOL isSupportTopic;
 
 /**
  * 群名称
@@ -357,8 +504,13 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 /// 群创建时间
 @property(nonatomic,assign,readonly) uint32_t createTime;
 
-/// 加群是否需要管理员审批，工作群（Work）不能主动加入，不支持此设置项
+/// 申请进群是否需要管理员审批：工作群（Work）默认值为 V2TIM_GROUP_ADD_FORBID，即默认不允许申请入群，您可以修改该字段打开申请入群方式。
 @property(nonatomic,assign) V2TIMGroupAddOpt groupAddOpt;
+
+/// 邀请进群是否需要管理员审批 （从 7.1 版本开始支持）
+/// - 除工作群（Work）之外的其他群类型默认值都为 V2TIM_GROUP_ADD_FORBID，即默认不允许邀请入群，您可以修改该字段打开邀请入群方式。
+/// - 直播群、社群和话题默认不允许邀请入群，也不支持修改。
+@property(nonatomic,assign) V2TIMGroupAddOpt groupApproveOpt;
 
 /// 群最近一次群资料修改时间
 @property(nonatomic,assign,readonly) uint32_t lastInfoTime;
@@ -369,8 +521,8 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 /// 已加入的群成员数量
 @property(nonatomic,assign,readonly) uint32_t memberCount;
 
-/// 在线的群成员数量
-@property(nonatomic,assign,readonly) uint32_t onlineCount;
+/// 在线的群成员数量（待废弃字段，请使用 getGroupOnlineMemberCount:succ:fail: 接口获取群在线人数）
+@property(nonatomic,assign,readonly) uint32_t onlineCount __attribute__((deprecated("use getGroupOnlineMemberCount:succ:fail: instead")));
 
 /// 最多允许加入的群成员数量
 /// @note 各类群成员人数限制详见: https://cloud.tencent.com/document/product/269/1502#.E7.BE.A4.E7.BB.84.E9.99.90.E5.88.B6.E5.B7.AE.E5.BC.82
@@ -384,10 +536,11 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 
 /// 当前用户在此群中的加入时间，不支持设置，系统自动生成
 @property(nonatomic,assign,readonly) uint32_t joinTime;
+
 @end
 
 /// 获取群组资料结果
-@interface V2TIMGroupInfoResult : NSObject
+V2TIM_EXPORT @interface V2TIMGroupInfoResult : NSObject
 
 /// 结果 0：成功；非0：失败
 @property(nonatomic,assign) int resultCode;
@@ -402,11 +555,93 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 
 /////////////////////////////////////////////////////////////////////////////////
 //
+//             话题基本资料（可以通过 getTopics 获取，不支持由客户自行创建）
+//
+/////////////////////////////////////////////////////////////////////////////////
+V2TIM_EXPORT @interface V2TIMTopicInfo : NSObject
+
+/// 话题 ID
+@property(nonatomic, strong) NSString *topicID;
+
+/// 话题名称
+@property(nonatomic, strong) NSString *topicName;
+
+/// 话题头像
+@property(nonatomic, strong) NSString *topicFaceURL;
+
+/// 话题介绍
+@property(nonatomic, strong) NSString *introduction;
+
+/// 话题公告
+@property(nonatomic, strong) NSString *notification;
+
+/// 话题全员禁言
+@property(nonatomic, assign) BOOL isAllMuted;
+
+/// 当前用户在话题中的禁言时间
+@property(nonatomic, assign, readonly) uint32_t selfMuteTime;
+
+/// 话题自定义字段
+@property(nonatomic, strong) NSString *customString;
+
+/// 话题消息接收选项，修改话题消息接收选项请调用 setGroupReceiveMessageOpt 接口
+@property(nonatomic, assign, readonly) V2TIMReceiveMessageOpt recvOpt;
+
+/// 话题草稿
+@property(nonatomic, strong) NSString *draftText;
+
+/// 话题消息未读数量
+@property(nonatomic, assign, readonly) uint64_t unreadCount;
+
+/// 话题 lastMessage
+@property(nonatomic,strong,readonly) V2TIMMessage *lastMessage;
+
+/// 话题 at 信息列表
+@property(nonatomic, strong, readonly) NSArray<V2TIMGroupAtInfo *> *groupAtInfolist;
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//             V2TIMTopicOperationResult
+//
+/////////////////////////////////////////////////////////////////////////////////
+V2TIM_EXPORT @interface V2TIMTopicOperationResult : NSObject
+
+/// 结果 0：成功；非0：失败
+@property(nonatomic, assign)  int errorCode;
+
+/// 如果删除失败，会返回错误信息
+@property(nonatomic, strong)  NSString *errorMsg;
+
+/// 如果删除成功，会返回对应的 topicID
+@property(nonatomic, strong)  NSString *topicID;
+@end
+
+/////////////////////////////////////////////////////////////////////////////////
+//
+//             V2TIMTopicInfoResult
+//
+/////////////////////////////////////////////////////////////////////////////////
+V2TIM_EXPORT @interface V2TIMTopicInfoResult : NSObject
+
+/// 结果 0：成功；非0：失败
+@property(nonatomic, assign)  int errorCode;
+
+/// 如果获取失败，会返回错误信息
+@property(nonatomic, strong)  NSString *errorMsg;
+
+/// 如果获取成功，会返回对应的 info
+@property(nonatomic, strong)  V2TIMTopicInfo *topicInfo;
+@end
+
+
+/////////////////////////////////////////////////////////////////////////////////
+//
 //          群申请信息（可以通过 getGroupApplicationList 获取，不支持由客户自行创建）
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 群申请信息
-@interface V2TIMGroupApplication : NSObject
+V2TIM_EXPORT @interface V2TIMGroupApplication : NSObject
 
 /// 群组 ID
 @property(nonatomic,strong,readonly) NSString* groupID;
@@ -433,7 +668,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 @property(nonatomic,strong,readonly) NSString* handledMsg;
 
 /// 请求类型
-@property(nonatomic,assign,readonly) V2TIMGroupApplicationGetType getType;
+@property(nonatomic,assign,readonly) V2TIMGroupApplicationType applicationType;
 
 /// 处理标志
 @property(nonatomic,assign,readonly) V2TIMGroupApplicationHandleStatus handleStatus;
@@ -450,7 +685,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 邀请其他人入群的操作结果
-@interface V2TIMGroupMemberOperationResult : NSObject
+V2TIM_EXPORT @interface V2TIMGroupMemberOperationResult : NSObject
 
 /// 被操作成员
 @property(nonatomic,strong) NSString* userID;
@@ -466,7 +701,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 创建群时指定群成员
-@interface V2TIMCreateGroupMemberInfo : NSObject
+V2TIM_EXPORT @interface V2TIMCreateGroupMemberInfo : NSObject
 
 /// 被操作成员
 @property(nonatomic,strong) NSString* userID;
@@ -487,7 +722,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 加群申请列表
-@interface V2TIMGroupApplicationResult : NSObject
+V2TIM_EXPORT @interface V2TIMGroupApplicationResult : NSObject
 
 /// 未读的申请数量
 @property(nonatomic,assign) uint64_t unreadCount;
@@ -501,7 +736,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 //                        群搜索
 //
 /////////////////////////////////////////////////////////////////////////////////
-@interface V2TIMGroupSearchParam : NSObject
+V2TIM_EXPORT @interface V2TIMGroupSearchParam : NSObject
 
 /// 搜索关键字列表，最多支持5个。
 @property(nonatomic, strong) NSArray<NSString *> *keywordList;
@@ -514,7 +749,7 @@ typedef NS_ENUM(NSInteger, V2TIMGroupApplicationHandleResult) {
 
 @end
 
-@interface V2TIMGroupMemberSearchParam : NSObject
+V2TIM_EXPORT @interface V2TIMGroupMemberSearchParam : NSObject
 
 /// 指定群 ID 列表，若为 null 则搜索全部群中的群成员
 @property(nonatomic, strong) NSArray<NSString *> *groupIDList;

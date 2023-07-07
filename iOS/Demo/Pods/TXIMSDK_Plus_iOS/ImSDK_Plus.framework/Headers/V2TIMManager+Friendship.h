@@ -9,7 +9,7 @@
 /////////////////////////////////////////////////////////////////////
 #import "V2TIMManager.h"
 
-@protocol V2TIMFriendshipListener;
+V2TIM_EXPORT @protocol V2TIMFriendshipListener;
 @class V2TIMFriendOperationResult;
 @class V2TIMFriendInfoResult;
 @class V2TIMFriendInfo;
@@ -20,7 +20,7 @@
 @class V2TIMFriendGroup;
 @class V2TIMFriendSearchParam;
 
-@interface V2TIMManager (Friendship)
+V2TIM_EXPORT @interface V2TIMManager (Friendship)
 
 /// 获取好友列表成功回调
 typedef void (^V2TIMFriendInfoListSucc)(NSArray<V2TIMFriendInfo *> *infoList);
@@ -110,9 +110,10 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 
 
 /**
- * 2.4 搜索好友（5.4.666 及以上版本支持，需要您购买旗舰版套餐）
-
- * @note 接口返回本地存储的用户资料，可以根据 V2TIMFriendInfoResult 中的 getRelation 来判断是否为好友。
+ * 2.4 搜索好友（5.4.666 及以上版本支持）
+ * @note
+ *  - 接口返回本地存储的用户资料，可以根据 V2TIMFriendInfoResult 中的 getRelation 来判断是否为好友。
+ *  - 该功能为 IM 旗舰版功能，[购买旗舰版套餐包](https://buy.cloud.tencent.com/avc?from=17474)后可使用，详见[价格说明](https://cloud.tencent.com/document/product/269/11673?from=17176#.E5.9F.BA.E7.A1.80.E6.9C.8D.E5.8A.A1.E8.AF.A6.E6.83.85)
  */
 - (void)searchFriends:(V2TIMFriendSearchParam *)searchParam succ:(V2TIMFriendInfoResultListSucc)succ fail:(V2TIMFail)fail;
 
@@ -152,7 +153,9 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 /**
  *  3.1 获取好友申请列表
  *
- *  @note 好友申请列表包括发起的好友申请和收到的好友申请。
+ *  @note
+ *   - 好友申请列表包括发起的好友申请和收到的好友申请。
+ *   - 最多支持100个。
 */
 - (void)getFriendApplicationList:(V2TIMFriendApplicationResultSucc)succ fail:(V2TIMFail)fail;
 
@@ -246,7 +249,6 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
  *  5.6 从好友分组中删除好友
  */
 - (void)deleteFriendsFromFriendGroup:(NSString *)groupName userIDList:(NSArray *)userIDList succ:(V2TIMFriendOperationResultListSucc)succ fail:(V2TIMFail)fail;
-
 @end
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -255,7 +257,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 资料关系链回调
-@protocol V2TIMFriendshipListener <NSObject>
+V2TIM_EXPORT @protocol V2TIMFriendshipListener <NSObject>
 @optional
 /**
  *  好友申请新增通知,两种情况会收到这个回调：
@@ -313,7 +315,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 好友资料获取结果
-@interface V2TIMFriendInfoResult : NSObject
+V2TIM_EXPORT @interface V2TIMFriendInfoResult : NSObject
 
 /// 返回码
 @property(nonatomic,assign) int resultCode;
@@ -334,7 +336,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 好友资料
-@interface V2TIMFriendInfo : NSObject
+V2TIM_EXPORT @interface V2TIMFriendInfo : NSObject
 
 /// 好友 ID
 @property(nonatomic,strong) NSString *userID;
@@ -347,6 +349,9 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
  * - 字段描述详见 [控制台](https://cloud.tencent.com/document/product/269/1501#.E6.A0.87.E9.85.8D.E5.A5.BD.E5.8F.8B.E5.AD.97.E6.AE.B5)。
 */
 @property(nonatomic,strong) NSString *friendRemark;
+
+/// 好友添加时间
+@property(nonatomic,assign,readonly) uint64_t friendAddTime;
 
 /// 好友自定义字段
 /// 首先要在 [控制台](https://console.cloud.tencent.com/im) (功能配置 -> 好友自定义字段) 配置好友自定义字段，然后再调用该接口进行设置，key 值不需要加 Tag_SNS_Custom_ 前缀。
@@ -376,7 +381,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 /////////////////////////////////////////////////////////////////////////////////
 
 /// 加好友
-@interface V2TIMFriendAddApplication : NSObject
+V2TIM_EXPORT @interface V2TIMFriendAddApplication : NSObject
 
 /// 用户 userID（必填）
 @property (nonatomic,strong) NSString* userID;
@@ -399,7 +404,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 @end
 
 /// 好友申请列表
-@interface V2TIMFriendApplicationResult : NSObject
+V2TIM_EXPORT @interface V2TIMFriendApplicationResult : NSObject
 
 /// 好友申请未读数量
 @property(nonatomic,assign) uint64_t unreadCount;
@@ -410,7 +415,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 @end
 
 /// 好友申请
-@interface V2TIMFriendApplication : NSObject
+V2TIM_EXPORT @interface V2TIMFriendApplication : NSObject
 
 /// 用户标识
 @property(nonatomic,strong,readonly) NSString* userID;
@@ -441,7 +446,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 好友关系链检查结果
-@interface V2TIMFriendCheckResult : NSObject
+V2TIM_EXPORT @interface V2TIMFriendCheckResult : NSObject
 
 /// 用户id
 @property(nonatomic,strong) NSString* userID;
@@ -463,7 +468,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 好友操作结果（添加、删除、加黑名单、添加分组等）
-@interface V2TIMFriendOperationResult : NSObject
+V2TIM_EXPORT @interface V2TIMFriendOperationResult : NSObject
 
 /// 用户Id
 @property(nonatomic,strong) NSString* userID;
@@ -482,7 +487,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 /// 好友分组
-@interface V2TIMFriendGroup : NSObject
+V2TIM_EXPORT @interface V2TIMFriendGroup : NSObject
 /// 好友分组名称
 @property(nonatomic,strong) NSString* groupName;
 
@@ -500,7 +505,7 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 //
 /////////////////////////////////////////////////////////////////////////////////
 
-@interface V2TIMFriendSearchParam : NSObject
+V2TIM_EXPORT @interface V2TIMFriendSearchParam : NSObject
 
 /// 搜索的关键字列表，关键字列表最多支持 5 个
 @property(nonatomic, strong) NSArray<NSString *> *keywordList;
@@ -515,4 +520,3 @@ typedef NS_ENUM(NSInteger, V2TIMFriendAcceptType) {
 @property(nonatomic, assign) BOOL isSearchRemark;;
 
 @end
-

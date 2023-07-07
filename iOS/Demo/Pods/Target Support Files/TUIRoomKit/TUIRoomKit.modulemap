@@ -1,0 +1,6 @@
+framework module TUIRoomKit {
+  umbrella header "TUIRoomKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

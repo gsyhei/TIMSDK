@@ -7,9 +7,9 @@
 /// 信令信息
 @class V2TIMSignalingInfo;
 /// 信令监听
-@protocol V2TIMSignalingListener;
+V2TIM_EXPORT @protocol V2TIMSignalingListener;
 
-@interface V2TIMManager (Signaling)
+V2TIM_EXPORT @interface V2TIMManager (Signaling)
 
 /**
  *  获取信令信息成功回调
@@ -101,20 +101,32 @@ NS_SWIFT_NAME(removeSignalingListener(listener:));
 /**
  *  添加邀请信令
  *
- *  在离线推送的场景下：
- *  针对 1V1 信令邀请，被邀请者 APP 如果被 Kill，当 APP 收到信令离线推送再次启动后，SDK 可以自动同步到邀请信令，如果邀请还没超时，用户会收到 onReceiveNewInvitation 回调，如果邀请已经超时，用户还会收到 onInvitationTimeout 回调。
+ *  主要用于邀请者在被邀请者离线期间，发送了群聊邀请，被邀请者上线后将该信令同步给 SDK，从而正常使用信令功能。
  *
- *  针对群信令邀请，被邀请者 APP 如果被 Kill，当 APP 收到离线推送再次启动后，SDK 无法自动同步到邀请信令（邀请信令本质上就是一条自定义消息，群离线消息在程序启动后无法自动同步），也就没法处理该邀请信令。如果被邀请者需要处理该邀请信令，可以让邀请者在发起信令的时候对针对每个被邀请者再单独发送一条 C2C 离线推送消息，消息里面携带 V2TIMSignalingInfo 信息，被邀请者收到离线推送的时候把 V2TIMSignalingInfo 信息再通过 addInvitedSignaling 接口告知 SDK。
- *
- *  TUIKit 群组音视频通话离线推送就是基于该接口实现，详细实现方法请参考文档：[集成音视频通话](https://cloud.tencent.com/document/product/269/39167)
+ *  当被邀请者点击离线推送提示，拉起 App 时：
+ *  1. 如果被邀请者离线期间，邀请者发送的是 1V1 信令，SDK 可以自动同步邀请信令。邀请未超时，回调 onReceiveNewInvitation。
+ *  2. 如果被邀请者离线期间，邀请者发送的是群聊信令，不同 SDK 版本表现如下：
+ *  - 6.7 以前的版本：
+ *  SDK 无法自动同步邀请信令（信令本质上就是一条自定义消息，群离线消息在程序启动后无法自动同步）。
+ *  如果被邀请者需要处理该邀请信令，可以让邀请者在发起信令时，向每个被邀请者额外发送一条 C2C 离线推送消息，消息携带 V2TIMSignalingInfo 信息。
+ *  被邀请者收到离线推送时通过 addInvitedSignaling 将 V2TIMSignalingInfo 信息告知 SDK。
+ *  - 6.7 及以后的版本：
+ *  SDK 会自动同步最近 30 秒的消息。如果其中包含了未超时的邀请信令，回调 onReceiveNewInvitation。您无需再调用本接口同步邀请信令。
  *
  *  @note 如果添加的信令信息已存在，fail callback 会抛 ERR_SDK_SIGNALING_ALREADY_EXISTS 错误码。
  */
 - (void)addInvitedSignaling:(V2TIMSignalingInfo *)signallingInfo succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
 
+/**
+ *  修改邀请信令（6.7 及其以上版本支持）
+ *
+ *  @note 仅支持修改邀请信令的自定义字段 data。只有在线用户才能收到的邀请信令不能被修改。
+ */
+- (void)modifyInvitation:(NSString *)inviteID data:(NSString *)data succ:(V2TIMSucc)succ fail:(V2TIMFail)fail;
+
 @end
 
-@protocol V2TIMSignalingListener <NSObject>
+V2TIM_EXPORT @protocol V2TIMSignalingListener <NSObject>
 @optional
 /// 收到邀请的回调
 -(void)onReceiveNewInvitation:(NSString *)inviteID inviter:(NSString *)inviter groupID:(NSString *)groupID inviteeList:(NSArray<NSString *> *)inviteeList data:(NSString * __nullable)data;
@@ -131,6 +143,9 @@ NS_SWIFT_NAME(removeSignalingListener(listener:));
 /// 邀请超时
 -(void)onInvitationTimeout:(NSString *)inviteID inviteeList:(NSArray<NSString *> *)inviteeList;
 
+/// 邀请被修改（6.7 及其以上版本支持）
+-(void)onInvitationModified:(NSString *)inviteID data:(NSString *)data;
+
 @end
 
 
@@ -143,7 +158,7 @@ typedef NS_ENUM(NSInteger,SignalingActionType) {
     SignalingActionType_Invite_Timeout   = 5,  // 邀请超时
 };
 
-@interface V2TIMSignalingInfo : NSObject
+V2TIM_EXPORT @interface V2TIMSignalingInfo : NSObject
 @property(nonatomic,strong) NSString *inviteID;
 @property(nonatomic,strong) NSString *groupID;
 @property(nonatomic,strong) NSString *inviter;
